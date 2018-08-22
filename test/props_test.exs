@@ -5,23 +5,23 @@ defmodule ICalendarTest.Props do
 
   describe "VBoolean" do
     test "to_ical" do
-      assert Props.to_ical(%VBoolean{value: true}) == "TRUE"
-      assert Props.to_ical(%VBoolean{value: false}) == "FALSE"
+      assert ICal.to_ical(%VBoolean{value: true}) == "TRUE"
+      assert ICal.to_ical(%VBoolean{value: false}) == "FALSE"
     end
   end
   describe "VFloat" do
     test "to_ical" do
-      assert Props.to_ical(%VFloat{value: 1.6}) == "1.6"
+      assert ICal.to_ical(%VFloat{value: 1.6}) == "1.6"
     end
   end
   describe "VInt" do
     test "to_ical" do
-      assert Props.to_ical(%VInt{value: 123}) == "123"
+      assert ICal.to_ical(%VInt{value: 123}) == "123"
     end
   end
   describe "VDate" do
     test "to_ical" do
-      assert Props.to_ical(
+      assert ICal.to_ical(
                %VDate{
                  value: %Date{
                    year: 2001,
@@ -30,7 +30,7 @@ defmodule ICalendarTest.Props do
                  }
                }
              ) == "20011212"
-      assert Props.to_ical(
+      assert ICal.to_ical(
                %VDate{
                  value: %Date{
                    year: 1899,
@@ -55,13 +55,13 @@ defmodule ICalendarTest.Props do
         utc_offset: 0,
         std_offset: 0
       }
-      assert Props.to_ical(
+      assert ICal.to_ical(
                %VDatetime{
                  value: datetime
                }
              ) == "20010102030405Z"
 
-      assert Props.to_ical(
+      assert ICal.to_ical(
                %VDatetime{
                  value: DateTime.to_naive(datetime)
                }
@@ -71,12 +71,12 @@ defmodule ICalendarTest.Props do
   describe "VCalAddress" do
     test "to_ical" do
       text = "MAILTO:maxm@mxm.dk"
-      assert Props.to_ical(%VCalAddress{value: text}) == text
+      assert ICal.to_ical(%VCalAddress{value: text}) == text
     end
   end
   describe "VBinary" do
     test "to_ical" do
-      assert Props.to_ical(%VBinary{value: "This is gibberish"}) == "VGhpcyBpcyBnaWJiZXJpc2g="
+      assert ICal.to_ical(%VBinary{value: "This is gibberish"}) == "VGhpcyBpcyBnaWJiZXJpc2g="
     end
   end
 end

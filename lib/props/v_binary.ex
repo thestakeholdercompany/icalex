@@ -2,6 +2,6 @@ defmodule ICalendar.Props.VBinary do
   @moduledoc false
 
   @enforce_keys [:value]
-  defstruct value: nil
+  defstruct ICalendar.Props.Prop.common_fields() ++ [params: %{encoding: "BASE64", value: "BINARY"}]
 
 end

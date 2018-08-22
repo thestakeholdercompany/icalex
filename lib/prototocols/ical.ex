@@ -1,4 +1,4 @@
-defprotocol Props do
+defprotocol ICal do
   @moduledoc false
 
   @doc "TODO"
@@ -8,19 +8,19 @@ defprotocol Props do
   #  def from_cal(data)
 end
 
-defimpl Props, for: ICalendar.Props.VBoolean do
+defimpl ICal, for: ICalendar.Props.VBoolean do
   def to_ical(%ICalendar.Props.VBoolean{value: value} = _data), do: if value, do: "TRUE", else: "FALSE"
 end
 
-defimpl Props, for: ICalendar.Props.VFloat do
+defimpl ICal, for: ICalendar.Props.VFloat do
   def to_ical(%ICalendar.Props.VFloat{value: value} = _data) when is_float(value), do: Float.to_string(value)
 end
 
-defimpl Props, for: ICalendar.Props.VInt do
+defimpl ICal, for: ICalendar.Props.VInt do
   def to_ical(%ICalendar.Props.VInt{value: value} = _data) when is_integer(value), do: Integer.to_string(value)
 end
 
-defimpl Props, for: ICalendar.Props.VDate do
+defimpl ICal, for: ICalendar.Props.VDate do
   def to_ical(%ICalendar.Props.VDate{value: value} = _data) do
     %Date{year: year, month: month, day: day} = value
     format = fn n -> n |> Integer.to_string |> String.pad_leading(2, "0") end
@@ -28,7 +28,7 @@ defimpl Props, for: ICalendar.Props.VDate do
   end
 end
 
-defimpl Props, for: ICalendar.Props.VDatetime do
+defimpl ICal, for: ICalendar.Props.VDatetime do
 
   defp format_date(year, month, day, hour, minute, second) do
     format = fn n -> n |> Integer.to_string |> String.pad_leading(2, "0") end
@@ -55,11 +55,11 @@ defimpl Props, for: ICalendar.Props.VDatetime do
   end
 end
 
-defimpl Props, for: ICalendar.Props.VCalAddress do
+defimpl ICal, for: ICalendar.Props.VCalAddress do
   def to_ical(%ICalendar.Props.VCalAddress{value: value} = _data) when is_bitstring(value), do: value
 end
 
-defimpl Props, for: ICalendar.Props.VBinary do
+defimpl ICal, for: ICalendar.Props.VBinary do
   def to_ical(%ICalendar.Props.VBinary{value: value} = _data) when is_bitstring(value), do: Base.encode64(value)
 end
 

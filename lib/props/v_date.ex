@@ -2,6 +2,6 @@ defmodule ICalendar.Props.VDate do
   @moduledoc false
 
   @enforce_keys [:value]
-  defstruct value: nil
+  defstruct ICalendar.Props.Prop.common_fields() ++ [params: %{value: "DATE"}]
 
 end
