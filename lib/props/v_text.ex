@@ -1,4 +1,4 @@
-defmodule ICalendar.Props.VFloat do
+defmodule ICalendar.Props.VText do
   @moduledoc false
 
   @enforce_keys [:value]

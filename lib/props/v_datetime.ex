@@ -3,5 +3,4 @@ defmodule ICalendar.Props.VDatetime do
 
   @enforce_keys [:value]
   defstruct ICalendar.Props.Prop.common_fields()
-
 end

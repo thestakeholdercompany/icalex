@@ -1,7 +1,7 @@
 defmodule ICalendarTest.Props do
   use ExUnit.Case
   doctest ICalendar
-  alias ICalendar.Props.{VBinary, VBoolean, VFloat, VInt, VDate, VDatetime, VCalAddress}
+  alias ICalendar.Props.{VBinary, VBoolean, VFloat, VInt, VDate, VDatetime, VCalAddress, VText}
 
   describe "VBoolean" do
     test "to_ical" do
@@ -9,38 +9,39 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(%VBoolean{value: false}) == "FALSE"
     end
   end
+
   describe "VFloat" do
     test "to_ical" do
       assert ICal.to_ical(%VFloat{value: 1.6}) == "1.6"
     end
   end
+
   describe "VInt" do
     test "to_ical" do
       assert ICal.to_ical(%VInt{value: 123}) == "123"
     end
   end
+
   describe "VDate" do
     test "to_ical" do
-      assert ICal.to_ical(
-               %VDate{
-                 value: %Date{
-                   year: 2001,
-                   month: 12,
-                   day: 12
-                 }
+      assert ICal.to_ical(%VDate{
+               value: %Date{
+                 year: 2001,
+                 month: 12,
+                 day: 12
                }
-             ) == "20011212"
-      assert ICal.to_ical(
-               %VDate{
-                 value: %Date{
-                   year: 1899,
-                   month: 1,
-                   day: 1
-                 }
+             }) == "20011212"
+
+      assert ICal.to_ical(%VDate{
+               value: %Date{
+                 year: 1899,
+                 month: 1,
+                 day: 1
                }
-             ) == "18990101"
+             }) == "18990101"
     end
   end
+
   describe "VDatetime" do
     test "to_ical" do
       datetime = %DateTime{
@@ -55,25 +56,43 @@ defmodule ICalendarTest.Props do
         utc_offset: 0,
         std_offset: 0
       }
-      assert ICal.to_ical(
-               %VDatetime{
-                 value: datetime
-               }
-             ) == "20010102030405Z"
 
-      assert ICal.to_ical(
-               %VDatetime{
-                 value: DateTime.to_naive(datetime)
-               }
-             ) == "20010102030405"
+      assert ICal.to_ical(%VDatetime{
+               value: datetime
+             }) == "20010102030405Z"
+
+      assert ICal.to_ical(%VDatetime{
+               value: DateTime.to_naive(datetime)
+             }) == "20010102030405"
     end
   end
+
   describe "VCalAddress" do
     test "to_ical" do
       text = "MAILTO:maxm@mxm.dk"
       assert ICal.to_ical(%VCalAddress{value: text}) == text
     end
   end
+
+  describe "VText" do
+    test "to_ical" do
+      #      # Escaped newlines
+      #      self.assertEqual(vText('Text with escaped\\N chars').to_ical(),
+      #        b'Text with escaped\\n chars')
+
+      text = "Simple text"
+      assert ICal.to_ical(%VText{value: text}) == text
+
+      assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
+               "Text \\; with escaped\\, chars"
+
+      assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
+               "Text \\; with escaped\\, chars"
+
+      # FIXME: assert ICal.to_ical(%VText{value: "Text with escaped\\N chars"}) == "Text with escaped\\n chars"
+    end
+  end
+
   describe "VBinary" do
     test "to_ical" do
       assert ICal.to_ical(%VBinary{value: "This is gibberish"}) == "VGhpcyBpcyBnaWJiZXJpc2g="

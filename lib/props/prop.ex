@@ -4,5 +4,4 @@ defmodule ICalendar.Props.Prop do
   def common_fields do
     [value: nil, params: %{}]
   end
-
 end
