@@ -17,10 +17,8 @@ defmodule ICalendar.Components.Component do
     component
     |> property_items
     |> Enum.map(fn {name, value} ->
-      # get the params from the value
-      # params = getattr(value, 'params', Parameters())
-      # Contentline.from_parts(name, params, value, sorted=sorted)
-      ContentLine.from_parts(name, %{}, value, true)
+      params = if is_map(value) and Map.has_key?(value, :params), do: value.params, else: %{}
+      ContentLine.from_parts(name, params, value, true)
     end)
     |> ContentLines.to_ical()
   end

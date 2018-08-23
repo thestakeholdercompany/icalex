@@ -81,9 +81,3 @@ defimpl ICal, for: ICalendar.Props.VBinary do
   def to_ical(%ICalendar.Props.VBinary{value: value} = _data) when is_bitstring(value),
     do: Base.encode64(value)
 end
-
-defimpl ICal, for: ICalendar.Components.Alarm do
-  def to_ical(%ICalendar.Components.Alarm{name: name} = _component) do
-    "something"
-  end
-end
