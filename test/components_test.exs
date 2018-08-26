@@ -62,7 +62,8 @@ defmodule ICalendarTest.Components do
       }
 
       assert Component.is_empty(component) == false
-#     FIXME assert Component.to_ical(component) == "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one\\n\\nParagraph two\r\nEND:VCALENDAR\r\n"
+
+      #     FIXME assert Component.to_ical(component) == "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one\\n\\nParagraph two\r\nEND:VCALENDAR\r\n"
     end
   end
 

@@ -19,7 +19,7 @@ defmodule ICalendar.Parsers.ContentLine do
   end
 
   def to_ical(content_line, limit \\ 75, separator \\ "\r\n ") do
-    #    assert '\n' not in line
+    # TODO   assert '\n' not in line
     limit = limit - 1
     fold_line(String.split_at(content_line, limit), "", limit, separator)
   end

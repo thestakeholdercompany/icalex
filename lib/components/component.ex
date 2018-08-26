@@ -53,4 +53,41 @@ defmodule ICalendar.Components.Component do
     end)
     |> ContentLines.to_ical()
   end
+
+  # is it possible to make more type safe
+  def add_component(component, sub_component) do
+    Map.put(component, :components, component.components ++ [sub_component])
+  end
+
+  def add(%{properties: properties} = component, name, value, parameters \\ nil, encode \\ true) do
+    # TODO: test when DateTime
+    value =
+      if encode and is_list(value) and String.downcase(name) not in ["rdate", "exdate"] do
+        for v <- value, do: encode(name, v, parameters, encode)
+      else
+        encode(name, value, parameters, encode)
+      end
+
+    value =
+      if Map.has_key?(properties, name) do
+        old_value = Map.get(properties, name)
+
+        cond do
+          is_list(old_value) and is_list(value) -> old_value ++ value
+          is_list(old_value) -> old_value ++ [value]
+          true -> [old_value, value]
+        end
+      else
+        value
+      end
+
+    Map.put(component, :properties, Map.put(properties, name, value))
+  end
+
+  defp encode(_, value, _, false), do: value
+  # FIXME defp encode(_, value, _, _) when ICal.impl_for(value), do: value
+  defp encode(name, value, parameters, encode) do
+    # TODO create factory
+
+  end
 end
