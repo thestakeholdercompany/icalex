@@ -1,6 +1,6 @@
 defmodule ICalendar.Components.Component do
   @moduledoc false
-  alias ICalendar.Props.VText
+  alias ICalendar.Props.{Parameters, VText}
   alias ICalendar.Parsers.{ContentLines, ContentLine}
 
   def property_items(component) do
@@ -17,7 +17,9 @@ defmodule ICalendar.Components.Component do
     component
     |> property_items
     |> Enum.map(fn {name, value} ->
-      params = if is_map(value) and Map.has_key?(value, :params), do: value.params, else: %{}
+      params =
+        if is_map(value) and Map.has_key?(value, :params), do: value.params, else: %Parameters{}
+
       ContentLine.from_parts(name, params, value, true)
     end)
     |> ContentLines.to_ical()

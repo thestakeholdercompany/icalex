@@ -2,7 +2,7 @@ defmodule ICalendarTest.Parsers do
   use ExUnit.Case
   doctest ICalendar
   alias ICalendar.Parsers.{ContentLine, ContentLines}
-  alias ICalendar.Props.{VText, VInt}
+  alias ICalendar.Props.{Parameters, VText, VInt}
 
   describe "ContentLine" do
     test "to_ical" do
@@ -20,30 +20,30 @@ defmodule ICalendarTest.Parsers do
     end
 
     test "from_parts" do
-      assert ContentLine.from_parts("ATTENDEE", %{}, "MAILTO:maxm@example.com") ==
+      assert ContentLine.from_parts("ATTENDEE", %Parameters{}, "MAILTO:maxm@example.com") ==
                "ATTENDEE:MAILTO:maxm@example.com"
 
       assert ContentLine.from_parts(
                "ATTENDEE",
-               %{"role" => "REQ-PARTICIPANT", "CN" => "Max Rasmussen"},
+               %Parameters{parameters: %{"role" => "REQ-PARTICIPANT", "CN" => "Max Rasmussen"}},
                "MAILTO:maxm@example.com"
              ) == "ATTENDEE;CN=\"Max Rasmussen\";ROLE=REQ-PARTICIPANT:MAILTO:maxm@example.com"
 
       assert ContentLine.from_parts(
                "ATTENDEE",
-               %{},
+               %Parameters{},
                %VText{value: "MAILTO:maxm@example.com"}
              ) == "ATTENDEE:MAILTO:maxm@example.com"
 
       assert ContentLine.from_parts(
                "SOMETHING",
-               %{},
+               %Parameters{},
                %VInt{value: 1}
              ) == "SOMETHING:1"
 
       assert ContentLine.from_parts(
                "SUMMARY",
-               %{},
+               %Parameters{},
                %VText{value: "International char æ ø å"}
              ) == "SUMMARY:International char æ ø å"
     end
