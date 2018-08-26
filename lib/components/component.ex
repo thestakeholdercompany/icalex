@@ -3,14 +3,43 @@ defmodule ICalendar.Components.Component do
   alias ICalendar.Props.{Parameters, VText}
   alias ICalendar.Parsers.{ContentLines, ContentLine}
 
-  def property_items(component) do
-    # vText = types_factory['text']
-    # properties = [('BEGIN', vText(self.name).to_ical())]
-    # properties.append(('END', vText(self.name).to_ical()))
+  def is_empty(%{properties: properties, components: components} = _params),
+    do: properties === %{} and components === []
+
+  def sorted_keys(component) do
+    # TODO: canonical_order
+    Map.keys(component.properties)
+  end
+
+  def property_items(component, recursive \\ true, sorted \\ true) do
     component_name = ICal.to_ical(%VText{value: component.name})
     properties = [{"BEGIN", component_name}]
-    properties = properties ++ [{"END", component_name}]
-    properties
+
+    property_names = if sorted, do: sorted_keys(component), else: Map.keys(component.properties)
+
+    properties =
+      property_names
+      |> Enum.reduce(properties, fn name, acc ->
+        values = Map.get(component.properties, name)
+
+        if is_list(values) do
+          acc ++ Enum.map(values, fn value -> {name, value} end)
+        else
+          acc ++ [{name, values}]
+        end
+      end)
+
+    properties =
+      if recursive do
+        component.components
+        |> Enum.reduce(properties, fn component, acc ->
+          acc ++ property_items(component, recursive, sorted)
+        end)
+      else
+        properties
+      end
+
+    properties ++ [{"END", component_name}]
   end
 
   def to_ical(component) do

@@ -1,5 +1,5 @@
 defmodule ICalendar.Components.TimezoneDaylight do
   @moduledoc false
 
-  defstruct name: "DAYLIGHT"
+  defstruct name: "DAYLIGHT", properties: %{}, components: []
 end

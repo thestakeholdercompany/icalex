@@ -25,6 +25,19 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
+    end
+
+    test "to_ical with properties" do
+      component = %Alarm{
+        properties: %{
+          "ATTENDEE" => "Max M"
+        }
+      }
+
+      assert Component.is_empty(component) == false
+      assert Component.to_ical(component) == "BEGIN:VALARM\r\nATTENDEE:Max M\r\nEND:VALARM\r\n"
     end
   end
 
@@ -37,6 +50,19 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
+    end
+
+    test "to_ical with properties" do
+      component = %Calendar{
+        properties: %{
+          "DESCRIPTION" => "Paragraph one\n\nParagraph two"
+        }
+      }
+
+      assert Component.is_empty(component) == false
+#     FIXME assert Component.to_ical(component) == "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one\\n\\nParagraph two\r\nEND:VCALENDAR\r\n"
     end
   end
 
@@ -49,6 +75,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 
@@ -61,6 +89,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 
@@ -73,6 +103,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 
@@ -85,6 +117,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 
@@ -97,6 +131,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 
@@ -109,6 +145,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 
@@ -121,6 +159,8 @@ defmodule ICalendarTest.Components do
 
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+
+      assert Component.is_empty(component)
     end
   end
 end
