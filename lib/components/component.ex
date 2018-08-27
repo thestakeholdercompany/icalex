@@ -3,15 +3,24 @@ defmodule ICalendar.Components.Component do
   alias ICalendar.Props.{Factory, Parameters, VText}
   alias ICalendar.Parsers.{ContentLines, ContentLine}
 
-  def is_empty(%{properties: properties, components: components} = _params),
-    do: properties === %{} and components === []
+  @enforce_keys [:name]
+  defstruct name: nil, properties: %{}, components: []
 
-  def sorted_keys(component) do
+  def is_empty(
+        %ICalendar.Components.Component{properties: properties, components: components} = _params
+      ),
+      do: properties === %{} and components === []
+
+  def sorted_keys(%ICalendar.Components.Component{} = component) do
     # TODO: canonical_order
     Map.keys(component.properties)
   end
 
-  def property_items(component, recursive \\ true, sorted \\ true) do
+  def property_items(
+        %ICalendar.Components.Component{} = component,
+        recursive \\ true,
+        sorted \\ true
+      ) do
     component_name = ICal.to_ical(%VText{value: component.name})
     properties = [{"BEGIN", component_name}]
 
@@ -42,7 +51,7 @@ defmodule ICalendar.Components.Component do
     properties ++ [{"END", component_name}]
   end
 
-  def to_ical(component) do
+  def to_ical(%ICalendar.Components.Component{} = component) do
     component
     |> property_items
     |> Enum.map(fn {name, value} ->
@@ -55,11 +64,17 @@ defmodule ICalendar.Components.Component do
   end
 
   # is it possible to make more type safe
-  def add_component(component, sub_component) do
+  def add_component(%ICalendar.Components.Component{} = component, sub_component) do
     Map.put(component, :components, component.components ++ [sub_component])
   end
 
-  def add(%{properties: properties} = component, name, value, parameters \\ nil, encode \\ true) do
+  def add(
+        %ICalendar.Components.Component{properties: properties} = component,
+        name,
+        value,
+        parameters \\ nil,
+        encode \\ true
+      ) do
     name = String.downcase(name)
     # TODO: test when DateTime
     value =

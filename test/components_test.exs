@@ -5,22 +5,14 @@ defmodule ICalendarTest.Components do
   alias ICalendar.Props
 
   alias ICalendar.Components.{
-    Alarm,
-    Calendar,
-    Component,
-    Event,
-    FreeBusy,
-    Journal,
-    Timezone,
-    TimezoneDaylight,
-    TimezoneStandard,
-    Todo
+    Factory,
+    Component
   }
 
   describe "Alarm" do
     test "to_ical with no sub components" do
       component_name = "VALARM"
-      component = %Alarm{}
+      component = Factory.get_component("alarm")
       assert component.name == component_name
 
       assert Component.to_ical(component) ==
@@ -28,7 +20,10 @@ defmodule ICalendarTest.Components do
 
       assert Component.is_empty(component)
 
-      component = component |> Component.add("prodid", "-//my product//")
+      component =
+        component
+        |> Component.add("prodid", "-//my product//")
+
       assert component.properties["prodid"] == %Props.VText{value: "-//my product//"}
 
       # TODO: c.add('rdate', [datetime(2013, 3, 28), datetime(2013, 3, 27)])
@@ -36,11 +31,13 @@ defmodule ICalendarTest.Components do
     end
 
     test "to_ical with properties" do
-      component = %Alarm{
-        properties: %{
-          "ATTENDEE" => "Max M"
-        }
-      }
+      component =
+        Factory.get_component(
+          "alarm",
+          %{
+            "ATTENDEE" => "Max M"
+          }
+        )
 
       assert Component.is_empty(component) == false
       assert Component.to_ical(component) == "BEGIN:VALARM\r\nATTENDEE:Max M\r\nEND:VALARM\r\n"
@@ -50,7 +47,7 @@ defmodule ICalendarTest.Components do
   describe "Calendar" do
     test "to_ical with no sub components" do
       component_name = "VCALENDAR"
-      component = %Calendar{}
+      component = Factory.get_component("calendar")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -61,11 +58,13 @@ defmodule ICalendarTest.Components do
     end
 
     test "to_ical with properties" do
-      component = %Calendar{
-        properties: %{
-          "DESCRIPTION" => "Paragraph one\n\nParagraph two"
-        }
-      }
+      component =
+        Factory.get_component(
+          "calendar",
+          %{
+            "DESCRIPTION" => "Paragraph one\n\nParagraph two"
+          }
+        )
 
       assert Component.is_empty(component) == false
 
@@ -73,10 +72,13 @@ defmodule ICalendarTest.Components do
     end
 
     test "to_ical with sub components" do
-      component = %Calendar{}
-      component = component |> Component.add("attendee", "John")
+      component = Factory.get_component("calendar")
 
-      event = %Event{}
+      component =
+        component
+        |> Component.add("attendee", "John")
+
+      event = Factory.get_component("event")
 
       event =
         event
@@ -87,17 +89,21 @@ defmodule ICalendarTest.Components do
       assert Component.to_ical(event) ==
                "BEGIN:VEVENT\r\nDTEND:20000102T000000\r\nDTSTART:20000101T000000\r\nSUMMARY:A brief history of time\r\nEND:VEVENT\r\n"
 
-      component = component |> Component.add_component(event)
+      component =
+        component
+        |> Component.add_component(event)
 
       assert component.components == [
-               %ICalendar.Components.Event{
+               %ICalendar.Components.Component{
                  components: [],
                  name: "VEVENT",
                  properties: %{
                    "dtend" => "20000102T000000",
                    "dtstart" => "20000101T000000",
                    "summary" => %ICalendar.Props.VText{
-                     params: %ICalendar.Props.Parameters{parameters: %{}},
+                     params: %ICalendar.Props.Parameters{
+                       parameters: %{}
+                     },
                      value: "A brief history of time"
                    }
                  }
@@ -112,7 +118,7 @@ defmodule ICalendarTest.Components do
   describe "Event" do
     test "to_ical with no sub components" do
       component_name = "VEVENT"
-      component = %Event{}
+      component = Factory.get_component("event")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -123,15 +129,27 @@ defmodule ICalendarTest.Components do
     end
 
     test "add properties" do
-      component = %Event{}
+      component = Factory.get_component("event")
       email = "one@email.com"
-      component = component |> Component.add("attendee", email)
+
+      component =
+        component
+        |> Component.add("attendee", email)
+
       assert %Props.VCalAddress{value: value} = component.properties["attendee"]
       assert email == value
-      component = component |> Component.add("attendee", ["test@test.com", "test2@test.com"])
+
+      component =
+        component
+        |> Component.add("attendee", ["test@test.com", "test2@test.com"])
+
       assert is_list(component.properties["attendee"])
       assert length(component.properties["attendee"]) == 3
-      component = component |> Component.add("attendee", "maxm@mxm.dk")
+
+      component =
+        component
+        |> Component.add("attendee", "maxm@mxm.dk")
+
       assert length(component.properties["attendee"]) == 4
       assert %Props.VCalAddress{value: value} = List.first(component.properties["attendee"])
       assert email == value
@@ -141,7 +159,7 @@ defmodule ICalendarTest.Components do
   describe "FreeBusy" do
     test "to_ical with no sub components" do
       component_name = "VFREEBUSY"
-      component = %FreeBusy{}
+      component = Factory.get_component("freebusy")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -155,7 +173,7 @@ defmodule ICalendarTest.Components do
   describe "Journal" do
     test "to_ical with no sub components" do
       component_name = "VJOURNAL"
-      component = %Journal{}
+      component = Factory.get_component("journal")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -169,7 +187,7 @@ defmodule ICalendarTest.Components do
   describe "Timezone" do
     test "to_ical with no sub components" do
       component_name = "VTIMEZONE"
-      component = %Timezone{}
+      component = Factory.get_component("timezone")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -183,7 +201,7 @@ defmodule ICalendarTest.Components do
   describe "TimezoneDaylight" do
     test "to_ical with no sub components" do
       component_name = "DAYLIGHT"
-      component = %TimezoneDaylight{}
+      component = Factory.get_component("daylight")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -197,7 +215,7 @@ defmodule ICalendarTest.Components do
   describe "TimezoneStandard" do
     test "to_ical with no sub components" do
       component_name = "STANDARD"
-      component = %TimezoneStandard{}
+      component = Factory.get_component("standard")
       assert component.name == component_name
       assert component.name == component_name
 
@@ -211,7 +229,7 @@ defmodule ICalendarTest.Components do
   describe "Todo" do
     test "to_ical with no sub components" do
       component_name = "VTODO"
-      component = %Todo{}
+      component = Factory.get_component("todo")
       assert component.name == component_name
       assert component.name == component_name
 
