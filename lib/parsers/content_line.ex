@@ -3,7 +3,6 @@ defmodule ICalendar.Parsers.ContentLine do
 
   alias ICalendar.Props.{Parameters, VText}
 
-  # TODO: create a Parameters struct?
   def from_parts(name, %Parameters{} = params, value, sorted \\ true) do
     value =
       case ICal.impl_for(value) do

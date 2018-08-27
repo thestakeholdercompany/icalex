@@ -1,6 +1,6 @@
 defmodule ICalendar.Components.Component do
   @moduledoc false
-  alias ICalendar.Props.{Parameters, VText}
+  alias ICalendar.Props.{Factory, Parameters, VText}
   alias ICalendar.Parsers.{ContentLines, ContentLine}
 
   def is_empty(%{properties: properties, components: components} = _params),
@@ -23,9 +23,9 @@ defmodule ICalendar.Components.Component do
         values = Map.get(component.properties, name)
 
         if is_list(values) do
-          acc ++ Enum.map(values, fn value -> {name, value} end)
+          acc ++ Enum.map(values, fn value -> {String.upcase(name), value} end)
         else
-          acc ++ [{name, values}]
+          acc ++ [{String.upcase(name), values}]
         end
       end)
 
@@ -75,6 +75,7 @@ defmodule ICalendar.Components.Component do
         cond do
           is_list(old_value) and is_list(value) -> old_value ++ value
           is_list(old_value) -> old_value ++ [value]
+          is_list(value) -> [old_value | value]
           true -> [old_value, value]
         end
       else
@@ -85,9 +86,16 @@ defmodule ICalendar.Components.Component do
   end
 
   defp encode(_, value, _, false), do: value
-  # FIXME defp encode(_, value, _, _) when ICal.impl_for(value), do: value
-  defp encode(name, value, parameters, encode) do
-    # TODO create factory
+  defp encode(name, value, nil, encode), do: encode(name, value, %Parameters{}, encode)
 
+  defp encode(name, value, %Parameters{} = parameters, _encode) do
+    if ICal.impl_for(value) do
+      value
+    else
+      Factory.get_type_name(name) |> Factory.get_type(value, parameters)
+    end
   end
+
+  defp encode(name, value, %{} = parameters, encode),
+    do: encode(name, value, %Parameters{parameters: parameters}, encode)
 end

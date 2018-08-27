@@ -1,7 +1,53 @@
 defmodule ICalendarTest.Props do
   use ExUnit.Case
   doctest ICalendar
-  alias ICalendar.Props.{VBinary, VBoolean, VFloat, VInt, VDate, VDatetime, VCalAddress, VText}
+
+  alias ICalendar.Props.{
+    Factory,
+    Parameters,
+    VBinary,
+    VBoolean,
+    VCalAddress,
+    VDate,
+    VDatetime,
+    VFloat,
+    VInt,
+    VText
+  }
+
+  describe "Factory" do
+    test "get_type binary should retrieve VBoolean" do
+      value = "some text"
+      params = %Parameters{parameters: %{encoding: "BASE64", value: "BINARY"}}
+      assert Factory.get_type("binary", value, params) == %VBinary{value: value}
+    end
+
+    test "get_type boolean should retrieve VBoolean" do
+      value = true
+      assert Factory.get_type("boolean", value) == %VBoolean{value: value}
+    end
+
+    test "get_type cal-address should retrieve VCalAddress" do
+      value = "some address"
+      assert Factory.get_type("cal-address", value) == %VCalAddress{value: value}
+    end
+
+    test "get_type text should retrieve VText" do
+      value = "some value"
+      assert Factory.get_type("text", value) == %VText{value: value}
+      assert Factory.get_type("unknown type", value) == %VText{value: value}
+    end
+
+    test "get_type float should retrieve VFloat" do
+      value = 1.0
+      assert Factory.get_type("float", value) == %VFloat{value: value}
+    end
+
+    test "get_type integer should retrieve VInt" do
+      value = 1
+      assert Factory.get_type("integer", value) == %VInt{value: value}
+    end
+  end
 
   describe "VBoolean" do
     test "to_ical" do
@@ -69,19 +115,15 @@ defmodule ICalendarTest.Props do
 
   describe "VCalAddress" do
     test "to_ical" do
-      text = "MAILTO:maxm@mxm.dk"
-      assert ICal.to_ical(%VCalAddress{value: text}) == text
+      value = "MAILTO:maxm@mxm.dk"
+      assert ICal.to_ical(%VCalAddress{value: value}) == value
     end
   end
 
   describe "VText" do
     test "to_ical" do
-      #      # Escaped newlines
-      #      self.assertEqual(vText('Text with escaped\\N chars').to_ical(),
-      #        b'Text with escaped\\n chars')
-
-      text = "Simple text"
-      assert ICal.to_ical(%VText{value: text}) == text
+      value = "Simple text"
+      assert ICal.to_ical(%VText{value: value}) == value
 
       assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
                "Text \\; with escaped\\, chars"
