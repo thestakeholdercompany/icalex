@@ -60,6 +60,7 @@ defmodule ICalendar.Components.Component do
   end
 
   def add(%{properties: properties} = component, name, value, parameters \\ nil, encode \\ true) do
+    name = String.downcase(name)
     # TODO: test when DateTime
     value =
       if encode and is_list(value) and String.downcase(name) not in ["rdate", "exdate"] do
