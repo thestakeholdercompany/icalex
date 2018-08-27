@@ -113,6 +113,55 @@ defmodule ICalendarTest.Components do
       assert Component.to_ical(component) ==
                "BEGIN:VCALENDAR\r\nATTENDEE:John\r\nBEGIN:VEVENT\r\nDTEND:20000102T000000\r\nDTSTART:20000101T000000\r\nSUMMARY:A brief history of time\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
     end
+
+    test "a compliant calendar" do
+      dtend = DateTime.utc_now()
+      dtstart = DateTime.utc_now()
+      dtend_str = Props.VDatetime.format_date(
+        dtend.year,
+        dtend.month,
+        dtend.day,
+        dtend.hour,
+        dtend.minute,
+        dtend.second
+      ) <> "Z"
+      dtstart_str = Props.VDatetime.format_date(
+        dtstart.year,
+        dtstart.month,
+        dtstart.day,
+        dtstart.hour,
+        dtstart.minute,
+        dtstart.second
+      ) <> "Z"
+      event_a =
+        Factory.get_component("event")
+        |> Component.add("description", "Let's go see Star Wars.")
+        |> Component.add("dtend", dtend)
+        |> Component.add("dtstart", dtstart)
+        |> Component.add("location", "123 Fun Street, Toronto ON, Canada")
+        |> Component.add("summary", "Film with Amy and Adam")
+
+      event_b =
+        Factory.get_component("event")
+        |> Component.add("description", "A big long meeting with lots of details.")
+        |> Component.add("dtend", dtend)
+        |> Component.add("dtstart", dtstart)
+        |> Component.add("location", "456 Boring Street, Toronto ON, Canada")
+        |> Component.add("summary", "Morning meeting")
+
+      component =
+        Factory.get_component("calendar", %{}, [event_a, event_b])
+        |> Component.add("calscale", "GREGORIAN")
+        |> Component.add("version", "2.0")
+      expected =
+        "BEGIN:VCALENDAR\r\nCALSCALE:GREGORIAN\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\n"
+        <> "DESCRIPTION:Let's go see Star Wars.\r\nDTEND:#{dtend_str}\r\nDTSTART:#{dtstart_str}\r\n"
+        <> "LOCATION:123 Fun Street\, Toronto ON\, Canada\r\nSUMMARY:Film with Amy and Adam\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n"
+        <> "DESCRIPTION:A big long meeting with lots of details.\r\nDTEND:#{dtend_str}\r\nDTSTART:#{dtstart_str}\r\n"
+        <> "LOCATION:456 Boring Street\, Toronto ON\, Canada\r\nSUMMARY:Morning meeting\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+
+      assert Component.to_ical(component) == expected
+    end
   end
 
   describe "Event" do

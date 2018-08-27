@@ -126,10 +126,10 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(%VText{value: value}) == value
 
       assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
-               "Text \\; with escaped\\, chars"
+               "Text \; with escaped\, chars"
 
       assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
-               "Text \\; with escaped\\, chars"
+               "Text \; with escaped\, chars"
 
       # FIXME: assert ICal.to_ical(%VText{value: "Text with escaped\\N chars"}) == "Text with escaped\\n chars"
     end

@@ -108,6 +108,12 @@ defmodule ICalendar.Props.Factory do
       "binary" ->
         %Props.VBinary{value: value, params: params}
 
+      "date" ->
+        %Props.VDDDTypes{value: value, params: params}
+
+      "date-time" ->
+        %Props.VDDDTypes{value: value, params: params}
+
       _ ->
         %Props.VText{value: value, params: params}
         # TODO: finish this
@@ -119,8 +125,6 @@ defmodule ICalendar.Props.Factory do
         # self['geo'] = vGeo
         # self['inline'] = vInline
         # self['date-time-list'] = vDDDLists
-        # self['date'] = vDDDTypes
-        # self['date-time'] = vDDDTypes
         # self['duration'] = vDDDTypes
     end
   end

@@ -44,3 +44,8 @@ defimpl ICal, for: ICalendar.Props.VBinary do
   def to_ical(prop),
     do: ICalendar.Props.VBinary.to_ical(prop)
 end
+
+defimpl ICal, for: ICalendar.Props.VDDDTypes do
+  def to_ical(prop),
+    do: ICalendar.Props.VDDDTypes.to_ical(prop)
+end

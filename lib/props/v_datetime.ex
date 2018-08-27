@@ -4,7 +4,7 @@ defmodule ICalendar.Props.VDatetime do
   @enforce_keys [:value]
   defstruct ICalendar.Props.Prop.common_fields()
 
-  defp format_date(year, month, day, hour, minute, second) do
+  def format_date(year, month, day, hour, minute, second) do
     format = fn n -> n |> Integer.to_string() |> String.pad_leading(2, "0") end
     "#{year}#{format.(month)}#{format.(day)}#{format.(hour)}#{format.(minute)}#{format.(second)}"
   end
@@ -25,9 +25,6 @@ defmodule ICalendar.Props.VDatetime do
     if zone_abbr == "UTC" do
       ts <> "Z"
     else
-      # TODO: this should be handle in Component.add
-      # elif tzid:
-      #   self.params.update({'TZID': tzid})
       ts
     end
   end
