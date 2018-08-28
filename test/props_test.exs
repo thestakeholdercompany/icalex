@@ -105,11 +105,11 @@ defmodule ICalendarTest.Props do
 
       assert ICal.to_ical(%VDatetime{
                value: datetime
-             }) == "20010102030405Z"
+             }) == "20010102T030405Z"
 
       assert ICal.to_ical(%VDatetime{
                value: DateTime.to_naive(datetime)
-             }) == "20010102030405"
+             }) == "20010102T030405"
     end
   end
 
@@ -126,10 +126,7 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(%VText{value: value}) == value
 
       assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
-               "Text \; with escaped\, chars"
-
-      assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
-               "Text \; with escaped\, chars"
+               "Text \\; with escaped\\, chars"
 
       # FIXME: assert ICal.to_ical(%VText{value: "Text with escaped\\N chars"}) == "Text with escaped\\n chars"
     end

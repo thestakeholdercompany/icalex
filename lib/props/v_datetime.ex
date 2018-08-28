@@ -6,7 +6,7 @@ defmodule ICalendar.Props.VDatetime do
 
   def format_date(year, month, day, hour, minute, second) do
     format = fn n -> n |> Integer.to_string() |> String.pad_leading(2, "0") end
-    "#{year}#{format.(month)}#{format.(day)}#{format.(hour)}#{format.(minute)}#{format.(second)}"
+    "#{year}#{format.(month)}#{format.(day)}T#{format.(hour)}#{format.(minute)}#{format.(second)}"
   end
 
   def to_ical(%ICalendar.Props.VDatetime{value: %DateTime{} = value} = _data) do

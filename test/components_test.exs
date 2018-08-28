@@ -117,48 +117,82 @@ defmodule ICalendarTest.Components do
     test "a compliant calendar" do
       dtend = DateTime.utc_now()
       dtstart = DateTime.utc_now()
-      dtend_str = Props.VDatetime.format_date(
-        dtend.year,
-        dtend.month,
-        dtend.day,
-        dtend.hour,
-        dtend.minute,
-        dtend.second
-      ) <> "Z"
-      dtstart_str = Props.VDatetime.format_date(
-        dtstart.year,
-        dtstart.month,
-        dtstart.day,
-        dtstart.hour,
-        dtstart.minute,
-        dtstart.second
-      ) <> "Z"
+
+      dtend_str =
+        Props.VDatetime.format_date(
+          dtend.year,
+          dtend.month,
+          dtend.day,
+          dtend.hour,
+          dtend.minute,
+          dtend.second
+        ) <> "Z"
+
+      dtstart_str =
+        Props.VDatetime.format_date(
+          dtstart.year,
+          dtstart.month,
+          dtstart.day,
+          dtstart.hour,
+          dtstart.minute,
+          dtstart.second
+        ) <> "Z"
+
+      uuid_a = UUID.uuid4()
+
       event_a =
         Factory.get_component("event")
         |> Component.add("description", "Let's go see Star Wars.")
         |> Component.add("dtend", dtend)
         |> Component.add("dtstart", dtstart)
+        |> Component.add("dtstamp", dtstart)
         |> Component.add("location", "123 Fun Street, Toronto ON, Canada")
         |> Component.add("summary", "Film with Amy and Adam")
+        |> Component.add("uid", uuid_a)
+
+      uuid_b = UUID.uuid4()
 
       event_b =
         Factory.get_component("event")
         |> Component.add("description", "A big long meeting with lots of details.")
         |> Component.add("dtend", dtend)
         |> Component.add("dtstart", dtstart)
+        |> Component.add("dtstamp", dtstart)
         |> Component.add("location", "456 Boring Street, Toronto ON, Canada")
         |> Component.add("summary", "Morning meeting")
+        |> Component.add("uid", uuid_b)
 
       component =
         Factory.get_component("calendar", %{}, [event_a, event_b])
         |> Component.add("calscale", "GREGORIAN")
         |> Component.add("version", "2.0")
-      expected =
-        "BEGIN:VCALENDAR\r\nCALSCALE:GREGORIAN\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\n"
-        <> "DESCRIPTION:Let's go see Star Wars.\r\nDTEND:#{dtend_str}\r\nDTSTART:#{dtstart_str}\r\n"
-        <> "LOCATION:123 Fun Street\, Toronto ON\, Canada\r\nSUMMARY:Film with Amy and Adam\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n"
-        <> "DESCRIPTION:A big long meeting with lots of details.\r\nDTEND:#{dtend_str}\r\nDTSTART:#{dtstart_str}\r\n"
-        <> "LOCATION:456 Boring Street\, Toronto ON\, Canada\r\nSUMMARY:Morning meeting\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+        |> Component.add("prodid", "-//ABC Corporation//NONSGML My Product//EN")
+
+      expected = """
+      BEGIN:VCALENDAR\r
+      CALSCALE:GREGORIAN\r
+      PRODID:-//ABC Corporation//NONSGML My Product//EN\r
+      VERSION:2.0\r
+      BEGIN:VEVENT\r
+      DESCRIPTION:Let's go see Star Wars.\r
+      DTEND:#{dtend_str}\r
+      DTSTAMP:#{dtstart_str}\r
+      DTSTART:#{dtstart_str}\r
+      LOCATION:123 Fun Street\\, Toronto ON\\, Canada\r
+      SUMMARY:Film with Amy and Adam\r
+      UID:#{uuid_a}\r
+      END:VEVENT\r
+      BEGIN:VEVENT\r
+      DESCRIPTION:A big long meeting with lots of details.\r
+      DTEND:#{dtend_str}\r
+      DTSTAMP:#{dtstart_str}\r
+      DTSTART:#{dtstart_str}\r
+      LOCATION:456 Boring Street\\, Toronto ON\\, Canada\r
+      SUMMARY:Morning meeting\r
+      UID:#{uuid_b}\r
+      END:VEVENT\r
+      END:VCALENDAR\r
+      """
 
       assert Component.to_ical(component) == expected
     end
