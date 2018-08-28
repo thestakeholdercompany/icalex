@@ -89,6 +89,7 @@ defmodule ICalendar.Props.Factory do
   end
 
   def get_type(type_name, value, %Props.Parameters{} = params \\ %Props.Parameters{}) do
+    # TODO do we really need to pass params here? if yes, when?
     case type_name do
       "text" ->
         %Props.VText{value: value, params: params}
@@ -114,16 +115,24 @@ defmodule ICalendar.Props.Factory do
       "date-time" ->
         %Props.VDDDTypes{value: value, params: params}
 
+      "geo" ->
+        %Props.VGeo{value: value, params: params}
+
+      "inline" ->
+        %Props.VInline{value: value, params: params}
+
+      "uri" ->
+        %Props.VUri{value: value, params: params}
+
+      "time" ->
+        %Props.VTime{value: value}
+
       _ ->
         %Props.VText{value: value, params: params}
         # TODO: finish this
         # self['period'] = vPeriod
         # self['recur'] = vRecur
-        # self['time'] = vTime
-        # self['uri'] = vUri
         # self['utc-offset'] = vUTCOffset
-        # self['geo'] = vGeo
-        # self['inline'] = vInline
         # self['date-time-list'] = vDDDLists
         # self['duration'] = vDDDTypes
     end

@@ -11,8 +11,12 @@ defmodule ICalendarTest.Props do
     VDate,
     VDatetime,
     VFloat,
+    VGeo,
+    VInline,
     VInt,
-    VText
+    VText,
+    VTime,
+    VUri
   }
 
   describe "Factory" do
@@ -46,6 +50,26 @@ defmodule ICalendarTest.Props do
     test "get_type integer should retrieve VInt" do
       value = 1
       assert Factory.get_type("integer", value) == %VInt{value: value}
+    end
+
+    test "get_type geo should retrieve VGeo" do
+      value = {1.3667, 103.8}
+      assert Factory.get_type("integer", value) == %VInt{value: value}
+    end
+
+    test "get_type inline should retrieve VInline" do
+      value = "some raw string"
+      assert Factory.get_type("inline", value) == %VInline{value: value}
+    end
+
+    test "get_type uri should retrieve VUri" do
+      value = "http://somewhere.com"
+      assert Factory.get_type("uri", value) == %VUri{value: value}
+    end
+
+    test "get_type time should retrieve VTime" do
+      value = {12, 34, 56}
+      assert Factory.get_type("time", value) == %VTime{value: value}
     end
   end
 
@@ -135,6 +159,32 @@ defmodule ICalendarTest.Props do
   describe "VBinary" do
     test "to_ical" do
       assert ICal.to_ical(%VBinary{value: "This is gibberish"}) == "VGhpcyBpcyBnaWJiZXJpc2g="
+    end
+  end
+
+  describe "VGeo" do
+    test "to_ical" do
+      assert ICal.to_ical(%VGeo{value: {1.3667, 103.8}}) == "1.3667;103.8"
+    end
+  end
+
+  describe "VInline" do
+    test "to_ical" do
+      value = "some raw string"
+      assert ICal.to_ical(%VInline{value: value}) == value
+    end
+  end
+
+  describe "VUri" do
+    test "to_ical" do
+      value = "http://somewhere.com"
+      assert ICal.to_ical(%VUri{value: value}) == value
+    end
+  end
+
+  describe "VTime" do
+    test "to_ical" do
+      assert ICal.to_ical(%VTime{value: {12, 34, 56}}) == "123456"
     end
   end
 end
