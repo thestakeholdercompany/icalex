@@ -6,6 +6,8 @@ defmodule ICalendar.Props.VBinary do
   defstruct ICalendar.Props.Prop.common_fields() ++
               [params: %Parameters{parameters: %{encoding: "BASE64", value: "BINARY"}}]
 
-  def to_ical(%ICalendar.Props.VBinary{value: value} = _data) when is_bitstring(value),
-    do: Base.encode64(value)
+  defimpl ICal do
+    def to_ical(%ICalendar.Props.VBinary{value: value} = _data) when is_bitstring(value),
+      do: Base.encode64(value)
+  end
 end

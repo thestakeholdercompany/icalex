@@ -9,30 +9,38 @@ defmodule ICalendar.Props.VDatetime do
     "#{year}#{format.(month)}#{format.(day)}T#{format.(hour)}#{format.(minute)}#{format.(second)}"
   end
 
-  def to_ical(%ICalendar.Props.VDatetime{value: %DateTime{} = value} = _data) do
-    %DateTime{
-      year: year,
-      month: month,
-      day: day,
-      hour: hour,
-      minute: minute,
-      second: second,
-      zone_abbr: zone_abbr
-    } = value
+  defimpl ICal do
+    def to_ical(%ICalendar.Props.VDatetime{value: %DateTime{} = value} = _data) do
+      %DateTime{
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        zone_abbr: zone_abbr
+      } = value
 
-    ts = format_date(year, month, day, hour, minute, second)
+      ts = ICalendar.Props.VDatetime.format_date(year, month, day, hour, minute, second)
 
-    if zone_abbr == "UTC" do
-      ts <> "Z"
-    else
-      ts
+      if zone_abbr == "UTC" do
+        ts <> "Z"
+      else
+        ts
+      end
     end
-  end
 
-  def to_ical(%ICalendar.Props.VDatetime{value: %NaiveDateTime{} = value} = _data) do
-    %NaiveDateTime{year: year, month: month, day: day, hour: hour, minute: minute, second: second} =
-      value
+    def to_ical(%ICalendar.Props.VDatetime{value: %NaiveDateTime{} = value} = _data) do
+      %NaiveDateTime{
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second
+      } = value
 
-    format_date(year, month, day, hour, minute, second)
+      ICalendar.Props.VDatetime.format_date(year, month, day, hour, minute, second)
+    end
   end
 end
