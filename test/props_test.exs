@@ -73,48 +73,76 @@ defmodule ICalendarTest.Props do
     end
   end
 
-  describe "VBoolean" do
+  describe "VBinary" do
+    test "of" do
+      value = "This is gibberish"
+      assert VBinary.of(value) == %VBinary{value: value}
+      params = %Parameters{parameters: %{some: "value"}}
+      assert VBinary.of(value, params) == %VBinary{value: value, params: params}
+    end
+
     test "to_ical" do
-      assert ICal.to_ical(%VBoolean{value: true}) == "TRUE"
-      assert ICal.to_ical(%VBoolean{value: false}) == "FALSE"
+      assert ICal.to_ical(VBinary.of("This is gibberish")) == "VGhpcyBpcyBnaWJiZXJpc2g="
+    end
+  end
+
+  describe "VBoolean" do
+    test "of" do
+      assert VBoolean.of(true) == %VBoolean{value: true}
+      assert VBoolean.of(false) == %VBoolean{value: false}
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(VBoolean.of(true)) == "TRUE"
+      assert ICal.to_ical(VBoolean.of(false)) == "FALSE"
     end
   end
 
   describe "VFloat" do
+    test "of" do
+      assert VFloat.of(1.6) == %VFloat{value: 1.6}
+    end
+
     test "to_ical" do
-      assert ICal.to_ical(%VFloat{value: 1.6}) == "1.6"
+      assert ICal.to_ical(VFloat.of(1.6)) == "1.6"
     end
   end
 
   describe "VInt" do
+    test "of" do
+      assert VInt.of(123) == %VInt{value: 123}
+    end
+
     test "to_ical" do
-      assert ICal.to_ical(%VInt{value: 123}) == "123"
+      assert ICal.to_ical(VInt.of(123)) == "123"
     end
   end
 
   describe "VDate" do
-    test "to_ical" do
-      assert ICal.to_ical(%VDate{
-               value: %Date{
-                 year: 2001,
-                 month: 12,
-                 day: 12
-               }
-             }) == "20011212"
+    test "of" do
+      value = %Date{
+        year: 2001,
+        month: 12,
+        day: 12
+      }
 
-      assert ICal.to_ical(%VDate{
-               value: %Date{
-                 year: 1899,
-                 month: 1,
-                 day: 1
-               }
-             }) == "18990101"
+      assert VDate.of(value) == %VDate{value: value}
+    end
+
+    test "to_ical" do
+      value = %Date{
+        year: 2001,
+        month: 12,
+        day: 12
+      }
+
+      assert ICal.to_ical(VDate.of(value)) == "20011212"
     end
   end
 
   describe "VDatetime" do
-    test "to_ical" do
-      datetime = %DateTime{
+    test "of" do
+      value = %DateTime{
         year: 2001,
         month: 1,
         day: 2,
@@ -127,64 +155,106 @@ defmodule ICalendarTest.Props do
         std_offset: 0
       }
 
-      assert ICal.to_ical(%VDatetime{
-               value: datetime
-             }) == "20010102T030405Z"
+      assert VDatetime.of(value) == %VDatetime{
+               value: value
+             }
 
-      assert ICal.to_ical(%VDatetime{
-               value: DateTime.to_naive(datetime)
-             }) == "20010102T030405"
+      assert VDatetime.of(DateTime.to_naive(value)) == %VDatetime{
+               value: DateTime.to_naive(value)
+             }
+    end
+
+    test "to_ical" do
+      value = %DateTime{
+        year: 2001,
+        month: 1,
+        day: 2,
+        hour: 3,
+        minute: 4,
+        second: 5,
+        time_zone: "Etc/UTC",
+        zone_abbr: "UTC",
+        utc_offset: 0,
+        std_offset: 0
+      }
+
+      assert ICal.to_ical(VDatetime.of(value)) == "20010102T030405Z"
+      assert ICal.to_ical(VDatetime.of(DateTime.to_naive(value))) == "20010102T030405"
     end
   end
 
   describe "VCalAddress" do
+    test "of" do
+      value = "MAILTO:maxm@mxm.dk"
+      assert VCalAddress.of(value) == %VCalAddress{value: value}
+    end
+
     test "to_ical" do
       value = "MAILTO:maxm@mxm.dk"
-      assert ICal.to_ical(%VCalAddress{value: value}) == value
+      assert ICal.to_ical(VCalAddress.of(value)) == value
     end
   end
 
   describe "VText" do
+    test "of" do
+      value = "Simple text"
+      assert VText.of(value) == %VText{value: value}
+    end
+
     test "to_ical" do
       value = "Simple text"
-      assert ICal.to_ical(%VText{value: value}) == value
+      assert ICal.to_ical(VText.of(value)) == value
 
-      assert ICal.to_ical(%VText{value: "Text ; with escaped, chars"}) ==
+      assert ICal.to_ical(VText.of("Text ; with escaped, chars")) ==
                "Text \\; with escaped\\, chars"
 
       # FIXME: assert ICal.to_ical(%VText{value: "Text with escaped\\N chars"}) == "Text with escaped\\n chars"
     end
   end
 
-  describe "VBinary" do
-    test "to_ical" do
-      assert ICal.to_ical(%VBinary{value: "This is gibberish"}) == "VGhpcyBpcyBnaWJiZXJpc2g="
-    end
-  end
-
   describe "VGeo" do
+    test "of" do
+      value = {1.3667, 103.8}
+      assert VGeo.of(value) == %VGeo{value: value}
+    end
+
     test "to_ical" do
-      assert ICal.to_ical(%VGeo{value: {1.3667, 103.8}}) == "1.3667;103.8"
+      assert ICal.to_ical(VGeo.of({1.3667, 103.8})) == "1.3667;103.8"
     end
   end
 
   describe "VInline" do
+    test "of" do
+      value = "some raw string"
+      assert VInline.of(value) == %VInline{value: value}
+    end
+
     test "to_ical" do
       value = "some raw string"
-      assert ICal.to_ical(%VInline{value: value}) == value
+      assert ICal.to_ical(VInline.of(value)) == value
     end
   end
 
   describe "VUri" do
+    test "of" do
+      value = "http://somewhere.com"
+      assert VUri.of(value) == %VUri{value: value}
+    end
+
     test "to_ical" do
       value = "http://somewhere.com"
-      assert ICal.to_ical(%VUri{value: value}) == value
+      assert ICal.to_ical(VUri.of(value)) == value
     end
   end
 
   describe "VTime" do
+    test "of" do
+      value = {12, 34, 56}
+      assert VTime.of(value) == %VTime{value: {12, 34, 56}}
+    end
+
     test "to_ical" do
-      assert ICal.to_ical(%VTime{value: {12, 34, 56}}) == "123456"
+      assert ICal.to_ical(VTime.of({12, 34, 56})) == "123456"
     end
   end
 end
