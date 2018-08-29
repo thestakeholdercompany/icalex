@@ -88,47 +88,49 @@ defmodule ICalendar.Props.Factory do
     Map.get(@property_to_type, property, "text")
   end
 
-  def get_type(type_name, value, %Props.Parameters{} = params \\ %Props.Parameters{}) do
-    # TODO do we really need to pass params here? if yes, when?
+  def get_type(type_name, value, %Props.Parameters{} = params),
+    do: Map.put(get_type(type_name, value), :params, params)
+
+  def get_type(type_name, value) do
     case type_name do
       "text" ->
-        %Props.VText{value: value, params: params}
+        Props.VText.of(value)
 
       "integer" ->
-        %Props.VInt{value: value, params: params}
+        Props.VInt.of(value)
 
       "float" ->
-        %Props.VFloat{value: value, params: params}
+        Props.VFloat.of(value)
 
       "cal-address" ->
-        %Props.VCalAddress{value: value, params: params}
+        Props.VCalAddress.of(value)
 
       "boolean" ->
-        %Props.VBoolean{value: value, params: params}
+        Props.VBoolean.of(value)
 
       "binary" ->
-        %Props.VBinary{value: value, params: params}
+        Props.VBinary.of(value)
 
       "date" ->
-        %Props.VDDDTypes{value: value, params: params}
+        Props.VDDDTypes.of(value)
 
       "date-time" ->
-        %Props.VDDDTypes{value: value, params: params}
+        Props.VDDDTypes.of(value)
 
       "geo" ->
-        %Props.VGeo{value: value, params: params}
+        Props.VGeo.of(value)
 
       "inline" ->
-        %Props.VInline{value: value, params: params}
+        Props.VInline.of(value)
 
       "uri" ->
-        %Props.VUri{value: value, params: params}
+        Props.VUri.of(value)
 
       "time" ->
-        %Props.VTime{value: value}
+        Props.VTime.of(value)
 
       _ ->
-        %Props.VText{value: value, params: params}
+        Props.VText.of(value)
         # TODO: finish this
         # self['period'] = vPeriod
         # self['recur'] = vRecur

@@ -10,6 +10,7 @@ defmodule ICalendarTest.Props do
     VCalAddress,
     VDate,
     VDatetime,
+    VDDDTypes,
     VFloat,
     VGeo,
     VInline,
@@ -17,6 +18,25 @@ defmodule ICalendarTest.Props do
     VText,
     VTime,
     VUri
+  }
+
+  @date %Date{
+    year: 2001,
+    month: 12,
+    day: 12
+  }
+
+  @date_time %DateTime{
+    year: 2001,
+    month: 1,
+    day: 2,
+    hour: 3,
+    minute: 4,
+    second: 5,
+    time_zone: "Etc/UTC",
+    zone_abbr: "UTC",
+    utc_offset: 0,
+    std_offset: 0
   }
 
   describe "Factory" do
@@ -54,7 +74,7 @@ defmodule ICalendarTest.Props do
 
     test "get_type geo should retrieve VGeo" do
       value = {1.3667, 103.8}
-      assert Factory.get_type("integer", value) == %VInt{value: value}
+      assert Factory.get_type("geo", value) == %VGeo{value: value}
     end
 
     test "get_type inline should retrieve VInline" do
@@ -120,66 +140,57 @@ defmodule ICalendarTest.Props do
 
   describe "VDate" do
     test "of" do
-      value = %Date{
-        year: 2001,
-        month: 12,
-        day: 12
-      }
-
-      assert VDate.of(value) == %VDate{value: value}
+      assert VDate.of(@date) == %VDate{value: @date}
     end
 
     test "to_ical" do
-      value = %Date{
-        year: 2001,
-        month: 12,
-        day: 12
-      }
-
-      assert ICal.to_ical(VDate.of(value)) == "20011212"
+      assert ICal.to_ical(VDate.of(@date)) == "20011212"
     end
   end
 
   describe "VDatetime" do
     test "of" do
-      value = %DateTime{
-        year: 2001,
-        month: 1,
-        day: 2,
-        hour: 3,
-        minute: 4,
-        second: 5,
-        time_zone: "Etc/UTC",
-        zone_abbr: "UTC",
-        utc_offset: 0,
-        std_offset: 0
-      }
-
-      assert VDatetime.of(value) == %VDatetime{
-               value: value
+      assert VDatetime.of(@date_time) == %VDatetime{
+               value: @date_time
              }
 
-      assert VDatetime.of(DateTime.to_naive(value)) == %VDatetime{
-               value: DateTime.to_naive(value)
+      assert VDatetime.of(DateTime.to_naive(@date_time)) == %VDatetime{
+               value: DateTime.to_naive(@date_time)
              }
     end
 
     test "to_ical" do
-      value = %DateTime{
-        year: 2001,
-        month: 1,
-        day: 2,
-        hour: 3,
-        minute: 4,
-        second: 5,
-        time_zone: "Etc/UTC",
-        zone_abbr: "UTC",
-        utc_offset: 0,
-        std_offset: 0
-      }
+      assert ICal.to_ical(VDatetime.of(@date_time)) == "20010102T030405Z"
+      assert ICal.to_ical(VDatetime.of(DateTime.to_naive(@date_time))) == "20010102T030405"
+    end
+  end
 
-      assert ICal.to_ical(VDatetime.of(value)) == "20010102T030405Z"
-      assert ICal.to_ical(VDatetime.of(DateTime.to_naive(value))) == "20010102T030405"
+  describe "VDDDTypes" do
+    test "of" do
+      assert VDDDTypes.of(@date) == %VDDDTypes{
+               value: @date
+             }
+
+      assert VDDDTypes.of(@date_time) == %VDDDTypes{
+               value: @date_time
+             }
+
+      assert VDDDTypes.of(DateTime.to_naive(@date_time)) == %VDDDTypes{
+               value: DateTime.to_naive(@date_time)
+             }
+
+      value = {12, 34, 56}
+
+      assert VDDDTypes.of(value) == %VDDDTypes{
+               value: value
+             }
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(VDDDTypes.of(@date)) == "20011212"
+      assert ICal.to_ical(VDDDTypes.of(@date_time)) == "20010102T030405Z"
+      assert ICal.to_ical(VDDDTypes.of(DateTime.to_naive(@date_time))) == "20010102T030405"
+      assert ICal.to_ical(VDDDTypes.of({12, 34, 56})) == "123456"
     end
   end
 
