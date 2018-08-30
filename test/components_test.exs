@@ -274,11 +274,48 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
-               "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
+      component =
+        component
+        |> Component.add("tzid", "America/Los_Angeles")
+        |> Component.add("x-lic-location", "America/Los_Angeles")
 
-      assert Component.is_empty(component)
+      expected =
+        "BEGIN:VTIMEZONE\r\nTZID:America/Los_Angeles\r\nX-LIC-LOCATION:America/Los_Angeles\r\nEND:VTIMEZONE\r\n"
+
+      assert Component.to_ical(component) == expected
+      assert Component.is_empty(component) == false
     end
+
+    #    test "to_ical with sub components" do
+    #      component = Factory.get_component("timezone")
+    #      component = component
+    #                  |> Component.add("tzid", "America/Los_Angeles")
+    #                  |> Component.add("x-lic-location", "America/Los_Angeles")
+    #
+    #      expected = """
+    #      BEGIN:VTIMEZONE\n
+    #      TZID:America/Los_Angeles\n
+    #      X-LIC-LOCATION:America/Los_Angeles\n
+    #      BEGIN:DAYLIGHT\n
+    #      TZOFFSETFROM:-0800\n
+    #      TZOFFSETTO:-0700\n
+    #      TZNAME:PDT\n
+    #      DTSTART:19700308T020000\n
+    #      RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU\n
+    #      END:DAYLIGHT\n
+    #      BEGIN:STANDARD\n
+    #      TZOFFSETFROM:-0700\n
+    #      TZOFFSETTO:-0800\n
+    #      TZNAME:PST\n
+    #      DTSTART:19701101T020000\n
+    #      RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU\n
+    #      END:STANDARD\n
+    #      END:VTIMEZONE\n
+    #      """
+    #
+    #      assert Component.to_ical(component) == expected
+    #      assert Component.is_empty(component) == false
+    #    end
   end
 
   describe "TimezoneDaylight" do
@@ -291,7 +328,25 @@ defmodule ICalendarTest.Components do
       assert Component.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
-      assert Component.is_empty(component)
+      dtstart = %NaiveDateTime{year: 1970, month: 10, day: 25, hour: 3, minute: 0, second: 0}
+
+      component =
+        component
+        |> Component.add("tzname", "CET")
+        |> Component.add("dtstart", dtstart)
+
+      #                  |> Component.add("rrule", nil) TODO
+      #                  |> Component.add("tzoffsetfrom", nil)
+      #                  |> Component.add("tzoffsetto", nil)
+
+      assert Component.is_empty(component) == false
+
+      # tzs = icalendar.TimezoneStandard()
+      # tzs.add('tzname', 'CET')
+      # tzs.add('dtstart', datetime.datetime(1970, 10, 25, 3, 0, 0))
+      # tzs.add('rrule', {'freq': 'yearly', 'bymonth': 10, 'byday': '-1su'})
+      # tzs.add('TZOFFSETFROM', datetime.timedelta(hours=2))
+      # tzs.add('TZOFFSETTO', datetime.timedelta(hours=1))
     end
   end
 
@@ -306,6 +361,12 @@ defmodule ICalendarTest.Components do
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
+      # tzd = icalendar.TimezoneDaylight()
+      # tzd.add('tzname', 'CEST')
+      # tzd.add('dtstart', datetime.datetime(1970, 3, 29, 2, 0, 0))
+      # tzs.add('rrule', {'freq': 'yearly', 'bymonth': 3, 'byday': '-1su'})
+      # tzd.add('TZOFFSETFROM', datetime.timedelta(hours=1))
+      # tzd.add('TZOFFSETTO', datetime.timedelta(hours=2))
     end
   end
 

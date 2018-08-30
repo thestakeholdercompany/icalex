@@ -6,18 +6,16 @@ defmodule ICalendar.Components.Component do
   @enforce_keys [:name]
   defstruct name: nil, properties: %{}, components: []
 
-  def is_empty(
-        %ICalendar.Components.Component{properties: properties, components: components} = _params
-      ),
-      do: properties === %{} and components === []
+  def is_empty(%__MODULE__{properties: properties, components: components} = _params),
+    do: properties === %{} and components === []
 
-  def sorted_keys(%ICalendar.Components.Component{} = component) do
-    # TODO: canonical_order
+  def sorted_keys(%__MODULE__{} = component) do
+    # TODO: canonical_order, look in VRecur
     Map.keys(component.properties)
   end
 
   def property_items(
-        %ICalendar.Components.Component{} = component,
+        %__MODULE__{} = component,
         recursive \\ true,
         sorted \\ true
       ) do
@@ -51,7 +49,7 @@ defmodule ICalendar.Components.Component do
     properties ++ [{"END", component_name}]
   end
 
-  def to_ical(%ICalendar.Components.Component{} = component) do
+  def to_ical(%__MODULE__{} = component) do
     component
     |> property_items
     |> Enum.map(fn {name, value} ->
@@ -63,20 +61,20 @@ defmodule ICalendar.Components.Component do
     |> ContentLines.to_ical()
   end
 
-  # is it possible to make more type safe
-  def add_component(%ICalendar.Components.Component{} = component, sub_component) do
+  def add_component(%__MODULE__{} = component, sub_component) do
     Map.put(component, :components, component.components ++ [sub_component])
   end
 
   def add(
-        %ICalendar.Components.Component{properties: properties} = component,
+        %__MODULE__{properties: properties} = component,
         name,
         value,
         parameters \\ nil,
         encode \\ true
       ) do
     name = String.downcase(name)
-    # TODO: test when DateTime
+
+    # TODO: test when DateTime because RFC expects UTC for ('dtstamp', 'created', 'last-modified') force value conversion.
     value =
       if encode and is_list(value) and String.downcase(name) not in ["rdate", "exdate"] do
         for v <- value, do: encode(name, v, parameters, encode)

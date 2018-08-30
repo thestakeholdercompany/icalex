@@ -12,7 +12,6 @@ defmodule ICalendar.Props.VDDDTypes do
 
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
-
       case value do
         %DateTime{} ->
           ICal.to_ical(ICalendar.Props.VDatetime.of(value))

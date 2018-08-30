@@ -19,6 +19,14 @@ defmodule ICalendarTest.Parsers do
                "DESCRIPTION:АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭ\r\n ЮЯ"
     end
 
+    test "to_ical should raise ArgumentError" do
+      assert_raise ArgumentError,
+                   "Content line can not contain unescaped new line characters.",
+                   fn ->
+                     ContentLine.to_ical("some line and\n another line")
+                   end
+    end
+
     test "from_parts" do
       assert ContentLine.from_parts("ATTENDEE", %Parameters{}, "MAILTO:maxm@example.com") ==
                "ATTENDEE:MAILTO:maxm@example.com"

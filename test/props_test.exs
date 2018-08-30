@@ -12,12 +12,15 @@ defmodule ICalendarTest.Props do
     VDatetime,
     VDDDTypes,
     VFloat,
+    VFrequency,
     VGeo,
     VInline,
     VInt,
+    VRecur,
     VText,
     VTime,
-    VUri
+    VUri,
+    VWeekday
   }
 
   @date %Date{
@@ -90,6 +93,24 @@ defmodule ICalendarTest.Props do
     test "get_type time should retrieve VTime" do
       value = {12, 34, 56}
       assert Factory.get_type("time", value) == %VTime{value: value}
+    end
+
+    test "get_type recur should retrieve VFloat" do
+      assert Factory.get_type("recur", %{}) == %VRecur{value: %{}}
+    end
+
+    test "get_type recur should retrieve VWeekday" do
+      assert Factory.get_type("weekday", "+3mo") == %VWeekday{
+               value: %{
+                 "relative" => "3",
+                 "signal" => "+",
+                 "weekday" => "mo"
+               }
+             }
+    end
+
+    test "get_type recur should retrieve VFrequency" do
+      assert Factory.get_type("frequency", "daily") == %VFrequency{value: "DAILY"}
     end
   end
 
@@ -266,6 +287,92 @@ defmodule ICalendarTest.Props do
 
     test "to_ical" do
       assert ICal.to_ical(VTime.of({12, 34, 56})) == "123456"
+    end
+  end
+
+  describe "VRecur" do
+    test "of" do
+      assert VRecur.of(%{}) == %VRecur{value: %{}}
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(
+               VRecur.of(%{
+                 "freq" => "yearly",
+                 "interval" => 2,
+                 "bymonth" => 1,
+                 "byday" => "su",
+                 "byhour" => [8, 9],
+                 "byminute" => 30
+               })
+             ) == "FREQ=YEARLY;INTERVAL=2;BYMINUTE=30;BYHOUR=8,9;BYDAY=SU;BYMONTH=1"
+
+      assert ICal.to_ical(
+               VRecur.of(%{
+                 "FREQ" => "DAILY",
+                 "COUNT" => 10,
+                 "BYSECOND" => [0, 15, 30, 45]
+               })
+             ) == "FREQ=DAILY;COUNT=10;BYSECOND=0,15,30,45"
+
+      assert ICal.to_ical(
+               VRecur.of(%{
+                 "freq" => "DAILY",
+                 "until" => %NaiveDateTime{year: 2005, month: 1, day: 1, hour: 12, minute: 0, second: 0}
+               })
+             ) == "FREQ=DAILY;UNTIL=20050101T120000"
+    end
+  end
+
+  describe "VWeekday" do
+    test "of" do
+      assert VWeekday.of("+3mo") == %VWeekday{
+               value: %{
+                 "relative" => "3",
+                 "signal" => "+",
+                 "weekday" => "mo"
+               }
+             }
+    end
+
+    # TODO improve this later
+    #    test "of should raise ArgumentError when bad signal" do
+    #      assert_raise ArgumentError, "Expected frequency, got: *", fn ->
+    #        VWeekday.of("*3mo")
+    #      end
+    #    end
+
+    test "of should raise ArgumentError when bad weekday" do
+      assert_raise ArgumentError, "Expected weekday, got: om", fn ->
+        VWeekday.of("2om")
+      end
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(VWeekday.of("mo")) == "MO"
+      assert ICal.to_ical(VWeekday.of("+mo")) == "+MO"
+      assert ICal.to_ical(VWeekday.of("+3mo")) == "+3MO"
+      assert ICal.to_ical(VWeekday.of("-tu")) == "-TU"
+    end
+  end
+
+  describe "VFrequency" do
+    test "of" do
+      ["secondly", "minutely", "hourly", "daily", "weekly", "monthly", "yearly"]
+      |> Enum.each(fn f -> assert VFrequency.of(f) == %VFrequency{value: String.upcase(f)} end)
+    end
+
+    test "of should raise ArgumentError" do
+      assert_raise ArgumentError, "Expected frequency, got: boum", fn ->
+        VFrequency.of("boum")
+      end
+    end
+
+    test "to_ical" do
+      ["secondly", "minutely", "hourly", "daily", "weekly", "monthly", "yearly"]
+      |> Enum.each(fn f ->
+        assert ICal.to_ical(VFrequency.of(f)) == String.upcase(f)
+      end)
     end
   end
 end

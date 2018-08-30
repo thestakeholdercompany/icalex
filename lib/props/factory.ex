@@ -129,11 +129,19 @@ defmodule ICalendar.Props.Factory do
       "time" ->
         Props.VTime.of(value)
 
+      "recur" ->
+        Props.VRecur.of(value)
+
+      "weekday" ->
+        Props.VWeekday.of(value)
+
+      "frequency" ->
+        Props.VFrequency.of(value)
+
       _ ->
         Props.VText.of(value)
         # TODO: finish this
         # self['period'] = vPeriod
-        # self['recur'] = vRecur
         # self['utc-offset'] = vUTCOffset
         # self['date-time-list'] = vDDDLists
         # self['duration'] = vDDDTypes

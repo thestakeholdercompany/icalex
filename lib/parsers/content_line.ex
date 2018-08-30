@@ -18,7 +18,13 @@ defmodule ICalendar.Parsers.ContentLine do
   end
 
   def to_ical(content_line, limit \\ 75, separator \\ "\r\n ") do
-    # TODO   assert '\n' not in line
+    if String.contains?(content_line, "\n"),
+      do:
+        raise(
+          ArgumentError,
+          message: "Content line can not contain unescaped new line characters."
+        )
+
     limit = limit - 1
     fold_line(String.split_at(content_line, limit), "", limit, separator)
   end
