@@ -1,6 +1,6 @@
 defprotocol ICal do
   @moduledoc false
 
-  @doc "TODO"
+  @doc false
   def to_ical(data)
 end
