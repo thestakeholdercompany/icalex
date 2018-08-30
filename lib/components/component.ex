@@ -103,7 +103,7 @@ defmodule ICalendar.Components.Component do
   defp encode(name, value, nil, encode), do: encode(name, value, %Parameters{}, encode)
 
   defp encode(name, value, %Parameters{} = parameters, _encode) do
-    if ICal.impl_for(value) do
+    if ICalendar.Props.is_prop(value) do
       value
     else
       Factory.get_type_name(name) |> Factory.get_type(value, parameters)

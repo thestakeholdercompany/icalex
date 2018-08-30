@@ -2,6 +2,8 @@ defmodule ICalendarTest.Props do
   use ExUnit.Case
   doctest ICalendar
 
+  alias ICalendar.Props
+
   alias ICalendar.Props.{
     Factory,
     Parameters,
@@ -125,6 +127,10 @@ defmodule ICalendarTest.Props do
     test "to_ical" do
       assert ICal.to_ical(VBinary.of("This is gibberish")) == "VGhpcyBpcyBnaWJiZXJpc2g="
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VBinary.of("This is gibberish"))
+    end
   end
 
   describe "VBoolean" do
@@ -137,6 +143,10 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(VBoolean.of(true)) == "TRUE"
       assert ICal.to_ical(VBoolean.of(false)) == "FALSE"
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VBoolean.of(true))
+    end
   end
 
   describe "VFloat" do
@@ -146,6 +156,10 @@ defmodule ICalendarTest.Props do
 
     test "to_ical" do
       assert ICal.to_ical(VFloat.of(1.6)) == "1.6"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VFloat.of(1.6))
     end
   end
 
@@ -157,6 +171,10 @@ defmodule ICalendarTest.Props do
     test "to_ical" do
       assert ICal.to_ical(VInt.of(123)) == "123"
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VInt.of(123))
+    end
   end
 
   describe "VDate" do
@@ -166,6 +184,10 @@ defmodule ICalendarTest.Props do
 
     test "to_ical" do
       assert ICal.to_ical(VDate.of(@date)) == "20011212"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VDate.of(@date))
     end
   end
 
@@ -183,6 +205,10 @@ defmodule ICalendarTest.Props do
     test "to_ical" do
       assert ICal.to_ical(VDatetime.of(@date_time)) == "20010102T030405Z"
       assert ICal.to_ical(VDatetime.of(DateTime.to_naive(@date_time))) == "20010102T030405"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VDatetime.of(@date_time))
     end
   end
 
@@ -213,6 +239,10 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(VDDDTypes.of(DateTime.to_naive(@date_time))) == "20010102T030405"
       assert ICal.to_ical(VDDDTypes.of({12, 34, 56})) == "123456"
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VDDDTypes.of(@date))
+    end
   end
 
   describe "VCalAddress" do
@@ -224,6 +254,10 @@ defmodule ICalendarTest.Props do
     test "to_ical" do
       value = "MAILTO:maxm@mxm.dk"
       assert ICal.to_ical(VCalAddress.of(value)) == value
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VCalAddress.of("MAILTO:maxm@mxm.dk"))
     end
   end
 
@@ -242,6 +276,10 @@ defmodule ICalendarTest.Props do
 
       # FIXME: assert ICal.to_ical(%VText{value: "Text with escaped\\N chars"}) == "Text with escaped\\n chars"
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VText.of("Simple text"))
+    end
   end
 
   describe "VGeo" do
@@ -252,6 +290,10 @@ defmodule ICalendarTest.Props do
 
     test "to_ical" do
       assert ICal.to_ical(VGeo.of({1.3667, 103.8})) == "1.3667;103.8"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VGeo.of({1.3667, 103.8}))
     end
   end
 
@@ -265,6 +307,10 @@ defmodule ICalendarTest.Props do
       value = "some raw string"
       assert ICal.to_ical(VInline.of(value)) == value
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VInline.of("some raw string"))
+    end
   end
 
   describe "VUri" do
@@ -277,6 +323,10 @@ defmodule ICalendarTest.Props do
       value = "http://somewhere.com"
       assert ICal.to_ical(VUri.of(value)) == value
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VUri.of("http://somewhere.com"))
+    end
   end
 
   describe "VTime" do
@@ -287,6 +337,10 @@ defmodule ICalendarTest.Props do
 
     test "to_ical" do
       assert ICal.to_ical(VTime.of({12, 34, 56})) == "123456"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VTime.of({12, 34, 56}))
     end
   end
 
@@ -329,6 +383,10 @@ defmodule ICalendarTest.Props do
                })
              ) == "FREQ=DAILY;UNTIL=20050101T120000"
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VRecur.of(%{}))
+    end
   end
 
   describe "VWeekday" do
@@ -361,6 +419,10 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(VWeekday.of("+3mo")) == "+3MO"
       assert ICal.to_ical(VWeekday.of("-tu")) == "-TU"
     end
+
+    test "is_prop" do
+      assert Props.is_prop(VWeekday.of("mo"))
+    end
   end
 
   describe "VFrequency" do
@@ -380,6 +442,10 @@ defmodule ICalendarTest.Props do
       |> Enum.each(fn f ->
         assert ICal.to_ical(VFrequency.of(f)) == String.upcase(f)
       end)
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VFrequency.of("yearly"))
     end
   end
 end

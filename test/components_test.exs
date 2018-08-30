@@ -318,26 +318,28 @@ defmodule ICalendarTest.Components do
         |> Component.add_component(daylight)
         |> Component.add_component(standard)
 
-      expected = """
-      BEGIN:VTIMEZONE
-      TZID:America/Los_Angeles
-      X-LIC-LOCATION:America/Los_Angeles
-      BEGIN:DAYLIGHT
-      DTSTART:19700308T020000
-      RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
-      TZNAME:PDT
-      TZOFFSETFROM:-0800
-      TZOFFSETTO:-0700
-      END:DAYLIGHT
-      BEGIN:STANDARD
-      DTSTART:19700308T020000
-      RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
-      TZNAME:PDT
-      TZOFFSETFROM:-0800
-      TZOFFSETTO:-0700
-      END:STANDARD
-      END:VTIMEZONE
-      """ |> String.replace("\n", "\r\n")
+      expected =
+        """
+        BEGIN:VTIMEZONE
+        TZID:America/Los_Angeles
+        X-LIC-LOCATION:America/Los_Angeles
+        BEGIN:DAYLIGHT
+        DTSTART:19700308T020000
+        RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
+        TZNAME:PDT
+        TZOFFSETFROM:-0800
+        TZOFFSETTO:-0700
+        END:DAYLIGHT
+        BEGIN:STANDARD
+        DTSTART:19700308T020000
+        RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
+        TZNAME:PDT
+        TZOFFSETFROM:-0800
+        TZOFFSETTO:-0700
+        END:STANDARD
+        END:VTIMEZONE
+        """
+        |> String.replace("\n", "\r\n")
 
       assert Component.to_ical(component) == expected
       assert Component.is_empty(component) == false
