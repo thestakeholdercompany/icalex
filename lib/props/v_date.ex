@@ -4,8 +4,7 @@ defmodule ICalendar.Props.VDate do
   alias ICalendar.Props.Parameters
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields() ++
-              [params: %Parameters{parameters: %{value: "DATE"}}]
+  defstruct ICalendar.Props.common_fields() ++ [params: %Parameters{parameters: %{value: "DATE"}}]
 
   def of(%Date{} = value), do: %__MODULE__{value: value}
 

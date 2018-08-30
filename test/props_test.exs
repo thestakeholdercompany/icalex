@@ -318,7 +318,14 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(
                VRecur.of(%{
                  "freq" => "DAILY",
-                 "until" => %NaiveDateTime{year: 2005, month: 1, day: 1, hour: 12, minute: 0, second: 0}
+                 "until" => %NaiveDateTime{
+                   year: 2005,
+                   month: 1,
+                   day: 1,
+                   hour: 12,
+                   minute: 0,
+                   second: 0
+                 }
                })
              ) == "FREQ=DAILY;UNTIL=20050101T120000"
     end

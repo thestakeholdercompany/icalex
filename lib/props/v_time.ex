@@ -4,8 +4,7 @@ defmodule ICalendar.Props.VTime do
   alias ICalendar.Props.Parameters
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields() ++
-              [params: %Parameters{parameters: %{value: "TIME"}}]
+  defstruct ICalendar.Props.common_fields() ++ [params: %Parameters{parameters: %{value: "TIME"}}]
 
   def of({_hours, _minutes, _seconds} = value), do: %__MODULE__{value: value}
 

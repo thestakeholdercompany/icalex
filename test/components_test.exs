@@ -286,36 +286,62 @@ defmodule ICalendarTest.Components do
       assert Component.is_empty(component) == false
     end
 
-    #    test "to_ical with sub components" do
-    #      component = Factory.get_component("timezone")
-    #      component = component
-    #                  |> Component.add("tzid", "America/Los_Angeles")
-    #                  |> Component.add("x-lic-location", "America/Los_Angeles")
-    #
-    #      expected = """
-    #      BEGIN:VTIMEZONE\n
-    #      TZID:America/Los_Angeles\n
-    #      X-LIC-LOCATION:America/Los_Angeles\n
-    #      BEGIN:DAYLIGHT\n
-    #      TZOFFSETFROM:-0800\n
-    #      TZOFFSETTO:-0700\n
-    #      TZNAME:PDT\n
-    #      DTSTART:19700308T020000\n
-    #      RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU\n
-    #      END:DAYLIGHT\n
-    #      BEGIN:STANDARD\n
-    #      TZOFFSETFROM:-0700\n
-    #      TZOFFSETTO:-0800\n
-    #      TZNAME:PST\n
-    #      DTSTART:19701101T020000\n
-    #      RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU\n
-    #      END:STANDARD\n
-    #      END:VTIMEZONE\n
-    #      """
-    #
-    #      assert Component.to_ical(component) == expected
-    #      assert Component.is_empty(component) == false
-    #    end
+    test "to_ical with sub components" do
+      component = Factory.get_component("timezone")
+
+      dtstart = %NaiveDateTime{year: 1970, month: 3, day: 8, hour: 2, minute: 0, second: 0}
+      rrule = %{"freq" => "yearly", "bymonth" => 3, "byday" => "2su"}
+
+      daylight =
+        Factory.get_component("daylight")
+        |> Component.add("tzoffsetfrom", "-0800")
+        |> Component.add("tzoffsetto", "-0700")
+        |> Component.add("tzname", "PDT")
+        |> Component.add("dtstart", dtstart)
+        |> Component.add("rrule", rrule)
+
+      standard =
+        Factory.get_component("standard")
+        |> Component.add("tzoffsetfrom", "-0800")
+        |> Component.add("tzoffsetto", "-0700")
+        |> Component.add("tzname", "PDT")
+        |> Component.add("dtstart", dtstart)
+        |> Component.add("rrule", rrule)
+
+      component =
+        component
+        |> Component.add("tzid", "America/Los_Angeles")
+        |> Component.add("x-lic-location", "America/Los_Angeles")
+
+      component =
+        component
+        |> Component.add_component(daylight)
+        |> Component.add_component(standard)
+
+      expected = """
+      BEGIN:VTIMEZONE
+      TZID:America/Los_Angeles
+      X-LIC-LOCATION:America/Los_Angeles
+      BEGIN:DAYLIGHT
+      DTSTART:19700308T020000
+      RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
+      TZNAME:PDT
+      TZOFFSETFROM:-0800
+      TZOFFSETTO:-0700
+      END:DAYLIGHT
+      BEGIN:STANDARD
+      DTSTART:19700308T020000
+      RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
+      TZNAME:PDT
+      TZOFFSETFROM:-0800
+      TZOFFSETTO:-0700
+      END:STANDARD
+      END:VTIMEZONE
+      """ |> String.replace("\n", "\r\n")
+
+      assert Component.to_ical(component) == expected
+      assert Component.is_empty(component) == false
+    end
   end
 
   describe "TimezoneDaylight" do
