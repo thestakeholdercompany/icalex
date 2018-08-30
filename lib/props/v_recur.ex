@@ -1,6 +1,6 @@
 defmodule ICalendar.Props.VRecur do
   @moduledoc false
-  use ICalendar.Props.Prop
+  use ICalendar.Props
   alias ICalendar.Props
 
   @canonical_keys [
@@ -53,7 +53,7 @@ defmodule ICalendar.Props.VRecur do
     do: Enum.reduce(m, %{}, fn {key, value}, acc -> Map.put(acc, String.downcase(key), value) end)
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.Prop.common_fields()
+  defstruct ICalendar.Props.common_fields()
 
   def of(%{} = value), do: %__MODULE__{value: map_keys_to_downcase(value)}
 

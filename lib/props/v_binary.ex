@@ -1,10 +1,10 @@
 defmodule ICalendar.Props.VBinary do
   @moduledoc false
-  use ICalendar.Props.Prop
+  use ICalendar.Props
   alias ICalendar.Props.Parameters
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.Prop.common_fields() ++
+  defstruct ICalendar.Props.common_fields() ++
               [params: %Parameters{parameters: %{encoding: "BASE64", value: "BINARY"}}]
 
   def of(value) when is_bitstring(value), do: %__MODULE__{value: value}

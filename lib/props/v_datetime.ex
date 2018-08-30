@@ -1,9 +1,9 @@
 defmodule ICalendar.Props.VDatetime do
   @moduledoc false
-  use ICalendar.Props.Prop
+  use ICalendar.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.Prop.common_fields()
+  defstruct ICalendar.Props.common_fields()
 
   def format_date(year, month, day, hour, minute, second) do
     format = fn n -> n |> Integer.to_string() |> String.pad_leading(2, "0") end

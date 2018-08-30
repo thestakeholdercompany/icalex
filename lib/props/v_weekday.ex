@@ -1,9 +1,9 @@
 defmodule ICalendar.Props.VWeekday do
   @moduledoc false
-  use ICalendar.Props.Prop
+  use ICalendar.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.Prop.common_fields()
+  defstruct ICalendar.Props.common_fields()
 
   def of(%{"relative" => _, "signal" => _signal, "weekday" => weekday} = value) do
     weekday = String.downcase(weekday)

@@ -1,10 +1,9 @@
 defmodule ICalendar.Props.VBoolean do
   @moduledoc false
-  use ICalendar.Props.Prop
-  alias ICalendar.Props.Parameters
+  use ICalendar.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.Prop.common_fields()
+  defstruct ICalendar.Props.common_fields()
 
   def of(value), do: %__MODULE__{value: value}
 

@@ -1,9 +1,9 @@
 defmodule ICalendar.Props.VDDDTypes do
   @moduledoc false
-  use ICalendar.Props.Prop
+  use ICalendar.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.Prop.common_fields()
+  defstruct ICalendar.Props.common_fields()
 
   def of(%Date{} = value), do: %__MODULE__{value: value}
   def of(%DateTime{} = value), do: %__MODULE__{value: value}

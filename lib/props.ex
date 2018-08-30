@@ -1,4 +1,4 @@
-defmodule ICalendar.Props.Prop do
+defmodule ICalendar.Props do
   @moduledoc false
   alias ICalendar.Props.Parameters
 
