@@ -112,4 +112,10 @@ defmodule ICalendar.Components.Component do
 
   defp encode(name, value, %{} = parameters, encode),
     do: encode(name, value, %Parameters{parameters: parameters}, encode)
+
+
+  defimpl ICal do
+    def to_ical(data),
+        do: ICalendar.Components.Component.to_ical(data)
+  end
 end

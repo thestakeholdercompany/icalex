@@ -15,7 +15,7 @@ defmodule ICalendarTest.Components do
       component = Factory.get_component("alarm")
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
@@ -40,7 +40,7 @@ defmodule ICalendarTest.Components do
         )
 
       assert Component.is_empty(component) == false
-      assert Component.to_ical(component) == "BEGIN:VALARM\r\nATTENDEE:Max M\r\nEND:VALARM\r\n"
+      assert ICal.to_ical(component) == "BEGIN:VALARM\r\nATTENDEE:Max M\r\nEND:VALARM\r\n"
     end
   end
 
@@ -51,7 +51,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
@@ -68,7 +68,7 @@ defmodule ICalendarTest.Components do
 
       assert Component.is_empty(component) == false
 
-      #     FIXME assert Component.to_ical(component) == "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one\\n\\nParagraph two\r\nEND:VCALENDAR\r\n"
+      #     FIXME assert ICal.to_ical(component) == "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one\\n\\nParagraph two\r\nEND:VCALENDAR\r\n"
     end
 
     test "to_ical with sub components" do
@@ -86,7 +86,7 @@ defmodule ICalendarTest.Components do
         |> Component.add("dtend", "20000102T000000", nil, false)
         |> Component.add("dtstart", "20000101T000000", nil, false)
 
-      assert Component.to_ical(event) ==
+      assert ICal.to_ical(event) ==
                "BEGIN:VEVENT\r\nDTEND:20000102T000000\r\nDTSTART:20000101T000000\r\nSUMMARY:A brief history of time\r\nEND:VEVENT\r\n"
 
       component =
@@ -110,7 +110,7 @@ defmodule ICalendarTest.Components do
                }
              ]
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:VCALENDAR\r\nATTENDEE:John\r\nBEGIN:VEVENT\r\nDTEND:20000102T000000\r\nDTSTART:20000101T000000\r\nSUMMARY:A brief history of time\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
     end
 
@@ -194,7 +194,7 @@ defmodule ICalendarTest.Components do
       END:VCALENDAR\r
       """
 
-      assert Component.to_ical(component) == expected
+      assert ICal.to_ical(component) == expected
     end
   end
 
@@ -205,7 +205,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
@@ -246,7 +246,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
@@ -260,7 +260,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
@@ -282,7 +282,7 @@ defmodule ICalendarTest.Components do
       expected =
         "BEGIN:VTIMEZONE\r\nTZID:America/Los_Angeles\r\nX-LIC-LOCATION:America/Los_Angeles\r\nEND:VTIMEZONE\r\n"
 
-      assert Component.to_ical(component) == expected
+      assert ICal.to_ical(component) == expected
       assert Component.is_empty(component) == false
     end
 
@@ -339,7 +339,7 @@ defmodule ICalendarTest.Components do
       END:VTIMEZONE
       """ |> String.replace("\n", "\r\n")
 
-      assert Component.to_ical(component) == expected
+      assert ICal.to_ical(component) == expected
       assert Component.is_empty(component) == false
     end
   end
@@ -351,7 +351,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       dtstart = %NaiveDateTime{year: 1970, month: 10, day: 25, hour: 3, minute: 0, second: 0}
@@ -383,7 +383,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
@@ -403,7 +403,7 @@ defmodule ICalendarTest.Components do
       assert component.name == component_name
       assert component.name == component_name
 
-      assert Component.to_ical(component) ==
+      assert ICal.to_ical(component) ==
                "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
