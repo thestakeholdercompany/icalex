@@ -5,10 +5,9 @@ defmodule ICalendar.Parsers.ContentLine do
 
   def from_parts(name, %Parameters{} = params, value, sorted \\ true) do
     value =
-      case ICal.impl_for(value) do
-        nil -> ICal.to_ical(%VText{value: value})
-        _ -> ICal.to_ical(value)
-      end
+      if ICalendar.Props.is_prop(value),
+        do: ICal.to_ical(value),
+        else: ICal.to_ical(%VText{value: value})
 
     if Parameters.is_empty(params) do
       "#{name}:#{value}"
