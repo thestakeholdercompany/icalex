@@ -142,10 +142,12 @@ defmodule ICalendar.Props.Factory do
         # TODO VUTCOffset
         Props.VText.of(value)
 
+      "period" ->
+        Props.VPeriod.of(value)
+
       _ ->
         Props.VText.of(value)
         # TODO: finish this
-        # self['period'] = vPeriod
         # self['date-time-list'] = vDDDLists
         # self['duration'] = vDDDTypes
     end

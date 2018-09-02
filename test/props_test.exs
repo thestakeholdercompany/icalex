@@ -18,6 +18,7 @@ defmodule ICalendarTest.Props do
     VGeo,
     VInline,
     VInt,
+    VPeriod,
     VRecur,
     VText,
     VTime,
@@ -242,6 +243,27 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VDDDTypes.of(@date))
+    end
+  end
+
+  describe "VPeriod" do
+    test "of" do
+      assert VPeriod.of({@date_time, @date_time}) == %VPeriod{
+               value: {@date_time, @date_time}
+             }
+
+      assert VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)}) == %VPeriod{
+               value: {DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)}
+             }
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(VPeriod.of({@date_time, @date_time})) == "20010102T030405Z/20010102T030405Z"
+      assert ICal.to_ical(VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)})) == "20010102T030405/20010102T030405"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VPeriod.of({@date_time, @date_time}))
     end
   end
 
