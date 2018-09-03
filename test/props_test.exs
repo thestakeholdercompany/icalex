@@ -2,6 +2,8 @@ defmodule ICalendarTest.Props do
   use ExUnit.Case
   doctest ICalendar
 
+  alias Timex.Duration
+
   alias ICalendar.Props
 
   alias ICalendar.Props.{
@@ -13,6 +15,7 @@ defmodule ICalendarTest.Props do
     VDate,
     VDatetime,
     VDDDTypes,
+    VDuration,
     VFloat,
     VFrequency,
     VGeo,
@@ -252,14 +255,19 @@ defmodule ICalendarTest.Props do
                value: {@date_time, @date_time}
              }
 
-      assert VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)}) == %VPeriod{
-               value: {DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)}
-             }
+      assert VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)}) ==
+               %VPeriod{
+                 value: {DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)}
+               }
     end
 
     test "to_ical" do
-      assert ICal.to_ical(VPeriod.of({@date_time, @date_time})) == "20010102T030405Z/20010102T030405Z"
-      assert ICal.to_ical(VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)})) == "20010102T030405/20010102T030405"
+      assert ICal.to_ical(VPeriod.of({@date_time, @date_time})) ==
+               "20010102T030405Z/20010102T030405Z"
+
+      assert ICal.to_ical(
+               VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)})
+             ) == "20010102T030405/20010102T030405"
     end
 
     test "is_prop" do
@@ -468,6 +476,34 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VFrequency.of("yearly"))
+    end
+  end
+
+  describe "VDuration" do
+    test "of" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+
+      assert VDuration.of(value) == %VDuration{
+               value: value
+             }
+    end
+
+    test "to_ical" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "P"
+      value = %Duration{megaseconds: 0, seconds: 86400, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "P1D"
+      value = %Duration{megaseconds: 0, seconds: -86400, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-P1D"
+      value = %Duration{megaseconds: 0, seconds: 86400 + 3600, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "P1DT1H"
+      value = %Duration{megaseconds: 0, seconds: -86400 + 3600, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-P1DT1H"
+    end
+
+    test "is_prop" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+      assert Props.is_prop(VDuration.of(value))
     end
   end
 end

@@ -74,11 +74,16 @@ defmodule ICalendar.Components.Component do
       ) do
     name = String.downcase(name)
 
-    value = case value do
-      %NaiveDateTime{} when name in ["dtstamp", "created", "last-modified"] -> Timex.to_datetime(value) # set to UTC
-      # TODO when TZID in Parameters
-      _ -> value
-    end
+    value =
+      case value do
+        # set to UTC
+        %NaiveDateTime{} when name in ["dtstamp", "created", "last-modified"] ->
+          Timex.to_datetime(value)
+
+        # TODO when TZID in Parameters or DateTime not utc
+        _ ->
+          value
+      end
 
     value =
       if encode and is_list(value) and String.downcase(name) not in ["rdate", "exdate"] do
@@ -118,9 +123,8 @@ defmodule ICalendar.Components.Component do
   defp encode(name, value, %{} = parameters, encode),
     do: encode(name, value, %Parameters{parameters: parameters}, encode)
 
-
   defimpl ICal do
     def to_ical(data),
-        do: ICalendar.Components.Component.to_ical(data)
+      do: ICalendar.Components.Component.to_ical(data)
   end
 end

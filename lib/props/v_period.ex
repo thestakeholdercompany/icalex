@@ -8,8 +8,11 @@ defmodule ICalendar.Props.VPeriod do
 
   # TODO accept timedelta?
 
-  def of({%DateTime{} = start_duration, %DateTime{} = end_duration} = value), do: %__MODULE__{value: value}
-  def of({%NaiveDateTime{} = start_duration, %NaiveDateTime{} = end_duration} = value), do: %__MODULE__{value: value}
+  def of({%DateTime{} = start_duration, %DateTime{} = end_duration} = value),
+    do: %__MODULE__{value: value}
+
+  def of({%NaiveDateTime{} = start_duration, %NaiveDateTime{} = end_duration} = value),
+    do: %__MODULE__{value: value}
 
   defimpl ICal do
     def to_ical(%{value: {start_duration, end_duration} = value} = _data) do
