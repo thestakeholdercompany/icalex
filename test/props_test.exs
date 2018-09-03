@@ -235,6 +235,7 @@ defmodule ICalendarTest.Props do
       assert VDDDTypes.of(value) == %VDDDTypes{
                value: value
              }
+     # TODO test VPeriod and VDuration
     end
 
     test "to_ical" do
@@ -430,12 +431,15 @@ defmodule ICalendarTest.Props do
              }
     end
 
-    # TODO improve this later
-    #    test "of should raise ArgumentError when bad signal" do
-    #      assert_raise ArgumentError, "Expected frequency, got: *", fn ->
-    #        VWeekday.of("*3mo")
-    #      end
-    #    end
+    test "of should drop bad signal" do
+      assert VWeekday.of("*3mo") == %VWeekday{
+               value: %{
+                 "relative" => "3",
+                 "signal" => "",
+                 "weekday" => "mo"
+               }
+             }
+    end
 
     test "of should raise ArgumentError when bad weekday" do
       assert_raise ArgumentError, "Expected weekday, got: om", fn ->
@@ -497,8 +501,28 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(VDuration.of(value)) == "-P1D"
       value = %Duration{megaseconds: 0, seconds: 86400 + 3600, microseconds: 0}
       assert ICal.to_ical(VDuration.of(value)) == "P1DT1H"
-      value = %Duration{megaseconds: 0, seconds: -86400 + 3600, microseconds: 0}
+      value = %Duration{megaseconds: 0, seconds: -86400 - 3600, microseconds: 0}
       assert ICal.to_ical(VDuration.of(value)) == "-P1DT1H"
+      value = %Duration{megaseconds: 0, seconds: 86400 + 3600 + 1800, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "P1DT1H30M"
+      value = %Duration{megaseconds: 0, seconds: -86400 - 3600 - 1800, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-P1DT1H30M"
+      value = %Duration{megaseconds: 0, seconds: 86400 + 3600 + 1800 + 10, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "P1DT1H30M10S"
+      value = %Duration{megaseconds: 0, seconds: -86400 - 3600 - 1800 - 10, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-P1DT1H30M10S"
+      value = %Duration{megaseconds: 0, seconds: 10, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "PT10S"
+      value = %Duration{megaseconds: 0, seconds: -10, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-PT10S"
+      value = %Duration{megaseconds: 0, seconds: 1800, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "PT30M"
+      value = %Duration{megaseconds: 0, seconds: -1800, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-PT30M"
+      value = %Duration{megaseconds: 0, seconds: 3600, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "PT1H"
+      value = %Duration{megaseconds: 0, seconds: -3600, microseconds: 0}
+      assert ICal.to_ical(VDuration.of(value)) == "-PT1H"
     end
 
     test "is_prop" do

@@ -1,6 +1,7 @@
 defmodule ICalendar.Props.VDDDTypes do
   @moduledoc false
   use ICalendar.Props
+  alias Timex.Duration
 
   @enforce_keys [:value]
   defstruct ICalendar.Props.common_fields()
@@ -9,6 +10,14 @@ defmodule ICalendar.Props.VDDDTypes do
   def of(%DateTime{} = value), do: %__MODULE__{value: value}
   def of(%NaiveDateTime{} = value), do: %__MODULE__{value: value}
   def of({_hours, _minutes, _seconds} = value), do: %__MODULE__{value: value}
+  def of({_hours, _minutes, _seconds} = value), do: %__MODULE__{value: value}
+  def of(%Duration{} = value), do: %__MODULE__{value: value}
+
+  def of({%DateTime{} = start_duration, %DateTime{} = end_duration} = value),
+    do: %__MODULE__{value: value}
+
+  def of({%NaiveDateTime{} = start_duration, %NaiveDateTime{} = end_duration} = value),
+    do: %__MODULE__{value: value}
 
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
@@ -24,7 +33,15 @@ defmodule ICalendar.Props.VDDDTypes do
 
         {_hours, _minutes, _seconds} ->
           ICal.to_ical(ICalendar.Props.VTime.of(value))
-          #          # TODO: add VDuration and VPeriod
+
+        %Duration{} ->
+          ICal.to_ical(ICalendar.Props.VDuration.of(value))
+
+        {%DateTime{}, %DateTime{}} ->
+          ICal.to_ical(ICalendar.Props.VPeriod.of(value))
+
+        {%NaiveDateTime{}, %NaiveDateTime{}} ->
+          ICal.to_ical(ICalendar.Props.VPeriod.of(value))
       end
     end
   end

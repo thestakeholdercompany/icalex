@@ -6,7 +6,7 @@ defmodule ICalendar.Props.VPeriod do
   @enforce_keys [:value]
   defstruct ICalendar.Props.common_fields()
 
-  # TODO accept timedelta?
+  # TODO accept Duration?
 
   def of({%DateTime{} = start_duration, %DateTime{} = end_duration} = value),
     do: %__MODULE__{value: value}
