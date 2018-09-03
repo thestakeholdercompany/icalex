@@ -74,7 +74,12 @@ defmodule ICalendar.Components.Component do
       ) do
     name = String.downcase(name)
 
-    # TODO: test when DateTime because RFC expects UTC for ('dtstamp', 'created', 'last-modified') force value conversion.
+    value = case value do
+      %NaiveDateTime{} when name in ["dtstamp", "created", "last-modified"] -> Timex.to_datetime(value) # set to UTC
+      # TODO when TZID in Parameters
+      _ -> value
+    end
+
     value =
       if encode and is_list(value) and String.downcase(name) not in ["rdate", "exdate"] do
         for v <- value, do: encode(name, v, parameters, encode)
