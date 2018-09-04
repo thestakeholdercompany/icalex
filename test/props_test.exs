@@ -14,6 +14,7 @@ defmodule ICalendarTest.Props do
     VCalAddress,
     VDate,
     VDatetime,
+    VDDDLists,
     VDDDTypes,
     VDuration,
     VFloat,
@@ -115,8 +116,28 @@ defmodule ICalendarTest.Props do
              }
     end
 
-    test "get_type recur should retrieve VFrequency" do
+    test "get_type frequency should retrieve VFrequency" do
       assert Factory.get_type("frequency", "daily") == %VFrequency{value: "DAILY"}
+    end
+
+    test "get_type date-time-list should retrieve VDDDTypes" do
+      assert Factory.get_type("date-time-list", @date_time) == %VDDDLists{
+               value: [VDDDTypes.of(@date_time)]
+             }
+    end
+
+    test "get_type duration should retrieve VDuration" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+
+      assert Factory.get_type("duration", value) == %VDuration{
+               value: value
+             }
+    end
+
+    test "get_type period should retrieve VPeriod" do
+      assert Factory.get_type("period", {@date_time, @date_time}) == %VPeriod{
+               value: {@date_time, @date_time}
+             }
     end
   end
 
@@ -235,7 +256,6 @@ defmodule ICalendarTest.Props do
       assert VDDDTypes.of(value) == %VDDDTypes{
                value: value
              }
-     # TODO test VPeriod and VDuration
     end
 
     test "to_ical" do
@@ -372,6 +392,28 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VTime.of({12, 34, 56}))
+    end
+  end
+
+  describe "VDDDLists" do
+    test "of" do
+      assert VDDDLists.of(@date_time) == %VDDDLists{value: [VDDDTypes.of(@date_time)]}
+
+      assert VDDDLists.of([@date_time, @date_time]) == %VDDDLists{
+               value: [VDDDTypes.of(@date_time), VDDDTypes.of(@date_time)]
+             }
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(VDDDLists.of([])) == ""
+      assert ICal.to_ical(VDDDLists.of(@date_time)) == "20010102T030405Z"
+
+      assert ICal.to_ical(VDDDLists.of([@date_time, @date_time])) ==
+               "20010102T030405Z,20010102T030405Z"
+    end
+
+    test "is_prop" do
+      assert Props.is_prop(VDDDLists.of(@date_time))
     end
   end
 

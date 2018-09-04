@@ -145,11 +145,14 @@ defmodule ICalendar.Props.Factory do
       "period" ->
         Props.VPeriod.of(value)
 
+      "date-time-list" ->
+        Props.VDDDLists.of(value)
+
+      "duration" ->
+        Props.VDuration.of(value)
+
       _ ->
         Props.VText.of(value)
-        # TODO: finish this
-        # self['date-time-list'] = vDDDLists
-        # self['duration'] = vDDDTypes
     end
   end
 end
