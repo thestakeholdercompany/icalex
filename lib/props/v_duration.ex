@@ -10,20 +10,20 @@ defmodule ICalendar.Props.VDuration do
 
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
-      alias ICalendar.Props.VDuration
-      {hours, minutes, seconds, _} = Duration.to_clock(value)
-      result = if Duration.to_milliseconds(value) < 0, do: "-P", else: "P"
-      days = (hours / 24) |> round() |> abs()
+      result = if Duration.to_seconds(value) < 0, do: "-P", else: "P"
+      days = abs(Duration.to_days(value)) |> trunc
       result = if days > 0, do: "#{result}#{days}D", else: result
-      hours = abs(hours) - days * 24
-      minutes = abs(minutes)
-      seconds = abs(seconds)
+      hours = (abs(Duration.to_hours(value)) - days * 24) |> trunc
+      minutes = (abs(Duration.to_minutes(value)) - (days * 1440 + hours * 60)) |> trunc
+
+      seconds =
+        (abs(Duration.to_seconds(value)) - (days * 86400 + hours * 3600 + minutes * 60)) |> trunc
 
       if hours + minutes + seconds > 0 do
-        result = result <> "T"
+        result = "#{result}T"
         result = if hours > 0, do: "#{result}#{hours}H", else: result
         result = if minutes > 0, do: "#{result}#{minutes}M", else: result
-        result = if seconds > 0, do: "#{result}#{seconds}S", else: result
+        if seconds > 0, do: "#{result}#{seconds}S", else: result
       else
         result
       end

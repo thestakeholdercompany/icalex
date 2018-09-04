@@ -27,6 +27,7 @@ defmodule ICalendarTest.Props do
     VText,
     VTime,
     VUri,
+    VUTCOffset,
     VWeekday
   }
 
@@ -392,6 +393,43 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VTime.of({12, 34, 56}))
+    end
+  end
+
+  describe "VUTCOffset" do
+    test "of" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+      assert VUTCOffset.of(value) == %VUTCOffset{value: value}
+    end
+
+    test "to_ical" do
+      assert ICal.to_ical(VUTCOffset.of(%Duration{megaseconds: 0, seconds: 0, microseconds: 0})) ==
+               "+0000"
+
+      assert ICal.to_ical(
+               VUTCOffset.of(%Duration{megaseconds: 0, seconds: 7200, microseconds: 0})
+             ) == "+0200"
+
+      assert ICal.to_ical(
+               VUTCOffset.of(%Duration{megaseconds: 0, seconds: -18000, microseconds: 0})
+             ) == "-0500"
+
+      assert ICal.to_ical(
+               VUTCOffset.of(%Duration{megaseconds: 0, seconds: -1800, microseconds: 0})
+             ) == "-0030"
+
+      assert ICal.to_ical(
+               VUTCOffset.of(%Duration{megaseconds: 0, seconds: 5400, microseconds: 0})
+             ) == "+0130"
+
+      assert ICal.to_ical(
+               VUTCOffset.of(%Duration{megaseconds: 0, seconds: 5407, microseconds: 0})
+             ) == "+013007"
+    end
+
+    test "is_prop" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+      assert Props.is_prop(VUTCOffset.of(value))
     end
   end
 
