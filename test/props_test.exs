@@ -290,6 +290,14 @@ defmodule ICalendarTest.Props do
       assert ICal.to_ical(
                VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)})
              ) == "20010102T030405/20010102T030405"
+
+      duration = %Duration{megaseconds: 0, seconds: -28800, microseconds: 0}
+      assert ICal.to_ical(VPeriod.of({@date_time, duration})) == "20010102T030405Z/-PT8H"
+
+      duration = %Duration{megaseconds: 0, seconds: 28800, microseconds: 0}
+
+      assert ICal.to_ical(VPeriod.of({DateTime.to_naive(@date_time), duration})) ==
+               "20010102T030405/PT8H"
     end
 
     test "is_prop" do

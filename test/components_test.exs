@@ -2,6 +2,8 @@ defmodule ICalendarTest.Components do
   use ExUnit.Case
   doctest ICalendar
 
+  alias Timex.Duration
+
   alias ICalendar.Props
 
   alias ICalendar.Components.{
@@ -302,18 +304,21 @@ defmodule ICalendarTest.Components do
       dtstart = %NaiveDateTime{year: 1970, month: 3, day: 8, hour: 2, minute: 0, second: 0}
       rrule = %{"freq" => "yearly", "bymonth" => 3, "byday" => "2su"}
 
+      tzoffsetfrom = %Duration{megaseconds: 0, seconds: -28800, microseconds: 0}
+      tzoffsetto = %Duration{megaseconds: 0, seconds: -25200, microseconds: 0}
+
       daylight =
         Factory.get_component("daylight")
-        |> Component.add("tzoffsetfrom", "-0800")
-        |> Component.add("tzoffsetto", "-0700")
+        |> Component.add("tzoffsetfrom", tzoffsetfrom)
+        |> Component.add("tzoffsetto", tzoffsetto)
         |> Component.add("tzname", "PDT")
         |> Component.add("dtstart", dtstart)
         |> Component.add("rrule", rrule)
 
       standard =
         Factory.get_component("standard")
-        |> Component.add("tzoffsetfrom", "-0800")
-        |> Component.add("tzoffsetto", "-0700")
+        |> Component.add("tzoffsetfrom", tzoffsetfrom)
+        |> Component.add("tzoffsetto", tzoffsetto)
         |> Component.add("tzname", "PDT")
         |> Component.add("dtstart", dtstart)
         |> Component.add("rrule", rrule)
