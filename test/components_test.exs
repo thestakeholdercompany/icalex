@@ -19,14 +19,28 @@ defmodule ICalendarTest.Components do
 
       assert Component.is_empty(component)
 
+      date = DateTime.utc_now()
+
       component =
         component
         |> Component.add("prodid", "-//my product//")
+        |> Component.add("rdate", [date, date])
 
       assert component.properties["prodid"] == %Props.VText{value: "-//my product//"}
 
-      # TODO: c.add('rdate', [datetime(2013, 3, 28), datetime(2013, 3, 27)])
-      #      self.assertTrue(isinstance(c.decoded('rdate'), prop.vDDDLists))
+      assert component.properties["rdate"] == %ICalendar.Props.VDDDLists{
+               params: %ICalendar.Props.Parameters{parameters: %{}},
+               value: [
+                 %ICalendar.Props.VDDDTypes{
+                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                   value: date
+                 },
+                 %ICalendar.Props.VDDDTypes{
+                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                   value: date
+                 }
+               ]
+             }
     end
 
     test "to_ical with properties" do
@@ -60,13 +74,14 @@ defmodule ICalendarTest.Components do
         Factory.get_component(
           "calendar",
           %{
-            "DESCRIPTION" => "Paragraph one\n\nParagraph two"
+            "DESCRIPTION" => "Paragraph one Paragraph two"
           }
         )
 
       assert Component.is_empty(component) == false
 
-      #     FIXME assert ICal.to_ical(component) == "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one\\n\\nParagraph two\r\nEND:VCALENDAR\r\n"
+      assert ICal.to_ical(component) ==
+               "BEGIN:VCALENDAR\r\nDESCRIPTION:Paragraph one Paragraph two\r\nEND:VCALENDAR\r\n"
     end
 
     test "to_ical with sub components" do
@@ -357,18 +372,7 @@ defmodule ICalendarTest.Components do
         |> Component.add("tzname", "CET")
         |> Component.add("dtstart", dtstart)
 
-      #                  |> Component.add("rrule", nil) TODO
-      #                  |> Component.add("tzoffsetfrom", nil)
-      #                  |> Component.add("tzoffsetto", nil)
-
       assert Component.is_empty(component) == false
-
-      # tzs = icalendar.TimezoneStandard()
-      # tzs.add('tzname', 'CET')
-      # tzs.add('dtstart', datetime.datetime(1970, 10, 25, 3, 0, 0))
-      # tzs.add('rrule', {'freq': 'yearly', 'bymonth': 10, 'byday': '-1su'})
-      # tzs.add('TZOFFSETFROM', datetime.timedelta(hours=2))
-      # tzs.add('TZOFFSETTO', datetime.timedelta(hours=1))
     end
   end
 
@@ -382,12 +386,6 @@ defmodule ICalendarTest.Components do
       assert ICal.to_ical(component) == "BEGIN:#{component_name}\r\nEND:#{component_name}\r\n"
 
       assert Component.is_empty(component)
-      # tzd = icalendar.TimezoneDaylight()
-      # tzd.add('tzname', 'CEST')
-      # tzd.add('dtstart', datetime.datetime(1970, 3, 29, 2, 0, 0))
-      # tzs.add('rrule', {'freq': 'yearly', 'bymonth': 3, 'byday': '-1su'})
-      # tzd.add('TZOFFSETFROM', datetime.timedelta(hours=1))
-      # tzd.add('TZOFFSETTO', datetime.timedelta(hours=2))
     end
   end
 

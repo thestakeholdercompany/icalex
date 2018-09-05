@@ -10,13 +10,12 @@ defmodule ICalendar.Props.VDDDTypes do
   def of(%DateTime{} = value), do: %__MODULE__{value: value}
   def of(%NaiveDateTime{} = value), do: %__MODULE__{value: value}
   def of({_hours, _minutes, _seconds} = value), do: %__MODULE__{value: value}
-  def of({_hours, _minutes, _seconds} = value), do: %__MODULE__{value: value}
   def of(%Duration{} = value), do: %__MODULE__{value: value}
 
-  def of({%DateTime{} = start_duration, %DateTime{} = end_duration} = value),
+  def of({%DateTime{} = _start_duration, %DateTime{} = _end_duration} = value),
     do: %__MODULE__{value: value}
 
-  def of({%NaiveDateTime{} = start_duration, %NaiveDateTime{} = end_duration} = value),
+  def of({%NaiveDateTime{} = _start_duration, %NaiveDateTime{} = _end_duration} = value),
     do: %__MODULE__{value: value}
 
   defimpl ICal do

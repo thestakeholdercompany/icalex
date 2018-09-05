@@ -325,8 +325,6 @@ defmodule ICalendarTest.Props do
 
       assert ICal.to_ical(VText.of("Text ; with escaped, chars")) ==
                "Text \\; with escaped\\, chars"
-
-      # FIXME: assert ICal.to_ical(%VText{value: "Text with escaped\\N chars"}) == "Text with escaped\\n chars"
     end
 
     test "is_prop" do

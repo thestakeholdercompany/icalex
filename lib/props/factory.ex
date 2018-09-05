@@ -139,8 +139,7 @@ defmodule ICalendar.Props.Factory do
         Props.VFrequency.of(value)
 
       "utc-offset" ->
-        # TODO VUTCOffset
-        Props.VText.of(value)
+        Props.VUTCOffset.of(value)
 
       "period" ->
         Props.VPeriod.of(value)
