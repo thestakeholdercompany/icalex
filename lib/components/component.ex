@@ -4,7 +4,15 @@ defmodule ICalendar.Components.Component do
   alias ICalendar.Parsers.{ContentLines, ContentLine}
 
   @enforce_keys [:name]
-  defstruct name: nil, properties: %{}, components: []
+  defstruct name: nil,
+            properties: %{},
+            components: [],
+            required: [],
+            singletons: [],
+            multiple: [],
+            exclusive: [],
+            inclusive: [],
+            canonical_order: []
 
   def is_empty(%__MODULE__{properties: properties, components: components} = _params),
     do: properties === %{} and components === []
