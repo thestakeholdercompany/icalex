@@ -50,7 +50,7 @@ defmodule ICalendarTest.Components do
         Factory.get_component(
           "alarm",
           %{
-            "ATTENDEE" => "Max M"
+            "attendee" => "Max M"
           }
         )
 
@@ -76,7 +76,7 @@ defmodule ICalendarTest.Components do
         Factory.get_component(
           "calendar",
           %{
-            "DESCRIPTION" => "Paragraph one Paragraph two"
+            "description" => "Paragraph one Paragraph two"
           }
         )
 
@@ -102,7 +102,7 @@ defmodule ICalendarTest.Components do
         |> Component.add("dtstart", "20000101T000000", nil, false)
 
       assert ICal.to_ical(event) ==
-               "BEGIN:VEVENT\r\nDTEND:20000102T000000\r\nDTSTART:20000101T000000\r\nSUMMARY:A brief history of time\r\nEND:VEVENT\r\n"
+               "BEGIN:VEVENT\r\nSUMMARY:A brief history of time\r\nDTSTART:20000101T000000\r\nDTEND:20000102T000000\r\nEND:VEVENT\r\n"
 
       component =
         component
@@ -111,22 +111,70 @@ defmodule ICalendarTest.Components do
       assert component.components == [
                %ICalendar.Components.Component{
                  components: [],
+                 inclusive: [],
                  name: "VEVENT",
                  properties: %{
                    "dtend" => "20000102T000000",
                    "dtstart" => "20000101T000000",
                    "summary" => %ICalendar.Props.VText{
-                     params: %ICalendar.Props.Parameters{
-                       parameters: %{}
-                     },
+                     params: %ICalendar.Props.Parameters{parameters: %{}},
                      value: "A brief history of time"
                    }
-                 }
+                 },
+                 canonical_order: [
+                   "summary",
+                   "dtstart",
+                   "dtend",
+                   "duration",
+                   "dtstamp",
+                   "uid",
+                   "recurrence-id",
+                   "sequence",
+                   "rrule",
+                   "rdate",
+                   "exdate"
+                 ],
+                 exclusive: ["dtend", "duration"],
+                 multiple: [
+                   "attach",
+                   "attendee",
+                   "categories",
+                   "comment",
+                   "contact",
+                   "exdate",
+                   "rstatus",
+                   "related",
+                   "resources",
+                   "rdate",
+                   "rrule"
+                 ],
+                 required: ["uid", "dtstamp"],
+                 singletons: [
+                   "class",
+                   "created",
+                   "description",
+                   "dtstart",
+                   "geo",
+                   "last-modified",
+                   "location",
+                   "organizer",
+                   "priority",
+                   "dtstamp",
+                   "sequence",
+                   "status",
+                   "summary",
+                   "transp",
+                   "url",
+                   "recurrence-id",
+                   "dtend",
+                   "duration",
+                   "uid"
+                 ]
                }
              ]
 
       assert ICal.to_ical(component) ==
-               "BEGIN:VCALENDAR\r\nATTENDEE:John\r\nBEGIN:VEVENT\r\nDTEND:20000102T000000\r\nDTSTART:20000101T000000\r\nSUMMARY:A brief history of time\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+               "BEGIN:VCALENDAR\r\nATTENDEE:John\r\nBEGIN:VEVENT\r\nSUMMARY:A brief history of time\r\nDTSTART:20000101T000000\r\nDTEND:20000102T000000\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
     end
 
     test "a compliant calendar" do
@@ -185,26 +233,26 @@ defmodule ICalendarTest.Components do
 
       expected = """
       BEGIN:VCALENDAR\r
-      CALSCALE:GREGORIAN\r
-      PRODID:-//ABC Corporation//NONSGML My Product//EN\r
       VERSION:2.0\r
+      PRODID:-//ABC Corporation//NONSGML My Product//EN\r
+      CALSCALE:GREGORIAN\r
       BEGIN:VEVENT\r
-      DESCRIPTION:Let's go see Star Wars.\r
+      SUMMARY:Film with Amy and Adam\r
+      DTSTART:#{dtstart_str}\r
       DTEND:#{dtend_str}\r
       DTSTAMP:#{dtstart_str}\r
-      DTSTART:#{dtstart_str}\r
-      LOCATION:123 Fun Street\\, Toronto ON\\, Canada\r
-      SUMMARY:Film with Amy and Adam\r
       UID:#{uuid_a}\r
+      DESCRIPTION:Let's go see Star Wars.\r
+      LOCATION:123 Fun Street\\, Toronto ON\\, Canada\r
       END:VEVENT\r
       BEGIN:VEVENT\r
-      DESCRIPTION:A big long meeting with lots of details.\r
+      SUMMARY:Morning meeting\r
+      DTSTART:#{dtstart_str}\r
       DTEND:#{dtend_str}\r
       DTSTAMP:#{dtstart_str}\r
-      DTSTART:#{dtstart_str}\r
-      LOCATION:456 Boring Street\\, Toronto ON\\, Canada\r
-      SUMMARY:Morning meeting\r
       UID:#{uuid_b}\r
+      DESCRIPTION:A big long meeting with lots of details.\r
+      LOCATION:456 Boring Street\\, Toronto ON\\, Canada\r
       END:VEVENT\r
       END:VCALENDAR\r
       """

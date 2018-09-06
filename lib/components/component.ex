@@ -18,8 +18,10 @@ defmodule ICalendar.Components.Component do
     do: properties === %{} and components === []
 
   def sorted_keys(%__MODULE__{} = component) do
-    # TODO: canonical_order, look in VRecur
-    Map.keys(component.properties)
+    keys = for key <- Map.keys(component.properties), do: String.downcase(key)
+    canonical_keys = component.canonical_order |> Enum.filter(&(&1 in keys))
+    non_canonical_keys = keys -- canonical_keys
+    canonical_keys ++ Enum.sort(non_canonical_keys)
   end
 
   def property_items(

@@ -91,7 +91,7 @@ defmodule ICalendar.Components.Factory do
 
       "freebusy" ->
         %Component{
-          name: "vfreebusy",
+          name: "VFREEBUSY",
           properties: properties,
           components: components,
           required: ["uid", "dtstamp"],
