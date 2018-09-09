@@ -18,7 +18,7 @@ defmodule ICalendar.Components.Component do
     do: properties === %{} and components === []
 
   def sorted_keys(%__MODULE__{} = component) do
-    keys = for key <- Map.keys(component.properties), do: String.downcase(key)
+    keys = component.properties |> Map.keys |> Enum.map(&String.downcase(&1))
     canonical_keys = component.canonical_order |> Enum.filter(&(&1 in keys))
     non_canonical_keys = keys -- canonical_keys
     canonical_keys ++ Enum.sort(non_canonical_keys)
@@ -132,6 +132,12 @@ defmodule ICalendar.Components.Component do
 
   defp encode(name, value, %{} = parameters, encode),
     do: encode(name, value, %Parameters{parameters: parameters}, encode)
+
+  def validate(%__MODULE__{} = component) do
+    keys = component.properties |> Map.keys |> Enum.map(&String.downcase(&1))
+    # TODO validate
+
+  end
 
   defimpl ICal do
     def to_ical(data),
