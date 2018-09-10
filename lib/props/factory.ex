@@ -154,4 +154,68 @@ defmodule ICalendar.Props.Factory do
         Props.VText.of(value)
     end
   end
+
+  def from_parts({type_name, %Parameters{} = parameters, value}) do
+    case type_name do
+#      "text" ->
+#        Props.VText.of(value)
+#
+#      "integer" ->
+#        Props.VInt.of(value)
+#
+#      "float" ->
+#        Props.VFloat.of(value)
+#
+#      "cal-address" ->
+#        Props.VCalAddress.of(value)
+#
+#      "boolean" ->
+#        Props.VBoolean.of(value)
+#
+#      "binary" ->
+#        Props.VBinary.of(value)
+#
+#      "date" ->
+#        Props.VDDDTypes.of(value)
+#
+#      "date-time" ->
+#        Props.VDDDTypes.of(value)
+#
+#      "geo" ->
+#        Props.VGeo.of(value)
+#
+#      "inline" ->
+#        Props.VInline.of(value)
+#
+#      "uri" ->
+#        Props.VUri.of(value)
+#
+#      "time" ->
+#        Props.VTime.of(value)
+#
+#      "recur" ->
+#        Props.VRecur.of(value)
+#
+#      "weekday" ->
+#        Props.VWeekday.of(value)
+#
+#      "frequency" ->
+#        Props.VFrequency.of(value)
+#
+#      "utc-offset" ->
+#        Props.VUTCOffset.of(value)
+#
+#      "period" ->
+#        Props.VPeriod.of(value)
+#
+#      "date-time-list" ->
+#        Props.VDDDLists.of(value)
+#
+#      "duration" ->
+#        Props.VDuration.of(value)
+#
+#      _ ->
+#        Props.VText.of(value)
+    end
+  end
 end
