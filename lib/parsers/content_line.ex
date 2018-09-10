@@ -3,6 +3,16 @@ defmodule ICalendar.Parsers.ContentLine do
 
   alias ICalendar.Props.{Parameters, VText}
 
+  def parts(line) when is_bitstring(line) do
+    [name_parameters, value] = String.split(line, ":", parts: 2)
+    [name | parameters] = String.split(name_parameters, ";")
+    parameters = Enum.reduce(parameters, %{}, fn (parameter, acc) ->
+      [key, value] = String.split(parameter, "=")
+      Map.put(acc, String.downcase(key), value)
+    end)
+    {String.downcase(name), %Parameters{parameters: parameters}, value}
+  end
+
   def from_parts(name, %Parameters{} = params, value, sorted \\ true) do
     value =
       if ICalendar.Props.is_prop(value),
