@@ -5,6 +5,18 @@ defmodule ICalendarTest.Parsers do
   alias ICalendar.Props.{Parameters, VText, VInt}
 
   describe "ContentLine" do
+
+    test "parts" do
+      assert ContentLine.parts("dtstart:20050101T120000") ==
+               {"dtstart", %Parameters{}, "20050101T120000"}
+
+      assert ContentLine.parts("dtstart;value=datetime:20050101T120000") ==
+               {"dtstart", %Parameters{parameters: %{"value" => "datetime"}}, "20050101T120000"}
+
+      assert ContentLine.parts("ATTENDEE;CN=Max Rasmussen;ROLE=REQ-PARTICIPANT:MAILTO:maxm@example.com") ==
+               {"attendee", %Parameters{parameters: %{"role" => "REQ-PARTICIPANT", "cn" => "Max Rasmussen"}}, "MAILTO:maxm@example.com"}
+    end
+
     test "to_ical" do
       assert ContentLine.to_ical("foo") == "foo"
 
