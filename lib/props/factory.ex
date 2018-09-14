@@ -155,7 +155,7 @@ defmodule ICalendar.Props.Factory do
     end
   end
 
-  def from_parts({type_name, %Parameters{} = parameters, value}) do
+  def from_parts({type_name, %Props.Parameters{} = parameters, value}) do
     case type_name do
 #      "text" ->
 #        Props.VText.of(value)
@@ -214,8 +214,8 @@ defmodule ICalendar.Props.Factory do
 #      "duration" ->
 #        Props.VDuration.of(value)
 #
-#      _ ->
-#        Props.VText.of(value)
+      _ ->
+        Props.VText.of(value)
     end
   end
 end
