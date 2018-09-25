@@ -7,6 +7,13 @@ defmodule ICalendar.Props.VInt do
 
   def of(value) when is_integer(value), do: %__MODULE__{value: value}
 
+  def from(value) when is_bitstring(value) do
+    case Integer.parse(value) do
+      {value, ""} -> __MODULE__.of(value)
+      _ -> raise ArgumentError, message: ~s(Expected an int, got: #{value})
+    end
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data), do: Integer.to_string(value)
   end

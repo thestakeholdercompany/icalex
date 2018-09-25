@@ -7,6 +7,13 @@ defmodule ICalendar.Props.VFloat do
 
   def of(value) when is_float(value), do: %__MODULE__{value: value}
 
+  def from(value) when is_bitstring(value) do
+    case Float.parse(value) do
+      {value, ""} -> __MODULE__.of(value)
+      _ -> raise ArgumentError, message: ~s(Expected a float, got: #{value})
+    end
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data),
       do: Float.to_string(value)

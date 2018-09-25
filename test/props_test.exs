@@ -207,6 +207,13 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VFloat.of(1.6))
     end
+
+    test "from" do
+      assert VFloat.from("1.5") == VFloat.of(1.5)
+      assert_raise ArgumentError, "Expected a float, got: bad value", fn ->
+        VFloat.from("bad value")
+      end
+    end
   end
 
   describe "VInt" do
@@ -220,6 +227,13 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VInt.of(123))
+    end
+
+    test "from" do
+      assert VInt.from("5") == VInt.of(5)
+      assert_raise ArgumentError, "Expected an int, got: bad value", fn ->
+        VInt.from("bad value")
+      end
     end
   end
 
