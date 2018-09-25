@@ -391,6 +391,10 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VText.of("Simple text"))
     end
+
+    test "from" do
+      assert VText.from("Simple text") == VText.of("Simple text")
+    end
   end
 
   describe "VGeo" do
@@ -437,6 +441,10 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VUri.of("http://somewhere.com"))
+    end
+
+    test "from" do
+      assert VUri.from("http://somewhere.com") == VUri.of("http://somewhere.com")
     end
   end
 
