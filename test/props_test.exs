@@ -51,10 +51,15 @@ defmodule ICalendarTest.Props do
   }
 
   describe "Factory" do
-    test "get_type binary should retrieve VBoolean" do
+    test "get_type binary should retrieve VBinary" do
       value = "some text"
       params = %Parameters{parameters: %{encoding: "BASE64", value: "BINARY"}}
       assert Factory.get_type("binary", value, params) == %VBinary{value: value}
+    end
+
+    test "from_ical binary should retrieve VBinary" do
+      #      value = Base.encode64("hello")
+      #      FIXME assert Factory.from_ical("binary", value) == VBinary.of(value)
     end
 
     test "get_type boolean should retrieve VBoolean" do
@@ -100,7 +105,7 @@ defmodule ICalendarTest.Props do
 
     test "get_type time should retrieve VTime" do
       value = {12, 34, 56}
-      assert Factory.get_type("time", value) == %VTime{value: value}
+      assert Factory.get_type("time", value) == %VTime{value: ~T[12:34:56]}
     end
 
     test "get_type recur should retrieve VFloat" do
@@ -157,6 +162,13 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VBinary.of("This is gibberish"))
     end
+
+    test "from" do
+      assert VBinary.from("VGhpcyBpcyBnaWJiZXJpc2g=") == VBinary.of("This is gibberish")
+      assert_raise ArgumentError, "Expected a base 64 encoding, got: bad value", fn ->
+        VBinary.from("bad value")
+      end
+    end
   end
 
   describe "VBoolean" do
@@ -172,6 +184,14 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VBoolean.of(true))
+    end
+
+    test "from" do
+      assert VBoolean.from("TrUe") == VBoolean.of(true)
+      assert VBoolean.from("false") == VBoolean.of(false)
+      assert_raise ArgumentError, "Expected \"true\" or \"false\", got: bad value", fn ->
+        VBoolean.from("bad value")
+      end
     end
   end
 
@@ -215,6 +235,13 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VDate.of(@date))
     end
+
+    test "from" do
+      assert VDate.from("20011212") == VDate.of(@date)
+      assert_raise ArgumentError, "Expected a date, got: bad value", fn ->
+        VDate.from("bad value")
+      end
+    end
   end
 
   describe "VDatetime" do
@@ -235,6 +262,14 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VDatetime.of(@date_time))
+    end
+
+    test "from" do
+      assert VDatetime.from("20010102T030405") == VDatetime.of(DateTime.to_naive(@date_time))
+      assert VDatetime.from("20010102T030405Z") == VDatetime.of(@date_time)
+      assert_raise ArgumentError, "Expected a date time, got: bad value", fn ->
+        VDatetime.from("bad value")
+      end
     end
   end
 
@@ -319,6 +354,10 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VCalAddress.of("MAILTO:maxm@mxm.dk"))
     end
+
+    test "from" do
+      assert VCalAddress.from("some address") == VCalAddress.of("some address")
+    end
   end
 
   describe "VText" do
@@ -389,8 +428,11 @@ defmodule ICalendarTest.Props do
 
   describe "VTime" do
     test "of" do
-      value = {12, 34, 56}
-      assert VTime.of(value) == %VTime{value: {12, 34, 56}}
+      assert VTime.of({12, 34, 56}) == %VTime{value: %Time{hour: 12, minute: 34, second: 56}}
+
+      assert VTime.of(%Time{hour: 12, minute: 34, second: 56}) == %VTime{
+               value: %Time{hour: 12, minute: 34, second: 56}
+             }
     end
 
     test "to_ical" do

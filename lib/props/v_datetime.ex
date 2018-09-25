@@ -1,6 +1,7 @@
 defmodule ICalendar.Props.VDatetime do
   @moduledoc false
   use ICalendar.Props
+  alias ICalendar.Parsers.Helpers
 
   @enforce_keys [:value]
   defstruct ICalendar.Props.common_fields()
@@ -12,6 +13,14 @@ defmodule ICalendar.Props.VDatetime do
 
   def of(%DateTime{} = value), do: %__MODULE__{value: value}
   def of(%NaiveDateTime{} = value), do: %__MODULE__{value: value}
+
+  def from(value) when is_bitstring(value) do
+    with {:ok, datetime} <- Helpers.parse_datetime(value) do
+      __MODULE__.of(datetime)
+    else
+      _ -> raise ArgumentError, message: ~s(Expected a date time, got: #{value})
+    end
+  end
 
   def to_ical(%{value: %NaiveDateTime{} = value} = _data) do
     %NaiveDateTime{

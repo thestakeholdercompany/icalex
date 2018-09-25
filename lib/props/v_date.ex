@@ -8,6 +8,14 @@ defmodule ICalendar.Props.VDate do
 
   def of(%Date{} = value), do: %__MODULE__{value: value}
 
+  def from(value) when is_bitstring(value) do
+    with {:ok, datetime} <- Timex.parse(value, "{YYYY}{M}{D}") do
+      __MODULE__.of(Timex.to_date(datetime))
+    else
+      _ -> raise ArgumentError, message: ~s(Expected a date, got: #{value})
+    end
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
       %Date{year: year, month: month, day: day} = value

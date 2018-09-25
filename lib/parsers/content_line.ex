@@ -6,10 +6,13 @@ defmodule ICalendar.Parsers.ContentLine do
   def parts(line) when is_bitstring(line) do
     [name_parameters, value] = String.split(line, ":", parts: 2)
     [name | parameters] = String.split(name_parameters, ";")
-    parameters = Enum.reduce(parameters, %{}, fn (parameter, acc) ->
-      [key, value] = String.split(parameter, "=")
-      Map.put(acc, String.downcase(key), value)
-    end)
+
+    parameters =
+      Enum.reduce(parameters, %{}, fn parameter, acc ->
+        [key, value] = String.split(parameter, "=")
+        Map.put(acc, String.downcase(key), value)
+      end)
+
     {String.downcase(name), %Parameters{parameters: parameters}, value}
   end
 
