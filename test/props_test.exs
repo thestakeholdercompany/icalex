@@ -165,6 +165,7 @@ defmodule ICalendarTest.Props do
 
     test "from" do
       assert VBinary.from("VGhpcyBpcyBnaWJiZXJpc2g=") == VBinary.of("This is gibberish")
+
       assert_raise ArgumentError, "Expected a base 64 encoding, got: bad value", fn ->
         VBinary.from("bad value")
       end
@@ -189,6 +190,7 @@ defmodule ICalendarTest.Props do
     test "from" do
       assert VBoolean.from("TrUe") == VBoolean.of(true)
       assert VBoolean.from("false") == VBoolean.of(false)
+
       assert_raise ArgumentError, "Expected \"true\" or \"false\", got: bad value", fn ->
         VBoolean.from("bad value")
       end
@@ -210,6 +212,7 @@ defmodule ICalendarTest.Props do
 
     test "from" do
       assert VFloat.from("1.5") == VFloat.of(1.5)
+
       assert_raise ArgumentError, "Expected a float, got: bad value", fn ->
         VFloat.from("bad value")
       end
@@ -231,6 +234,7 @@ defmodule ICalendarTest.Props do
 
     test "from" do
       assert VInt.from("5") == VInt.of(5)
+
       assert_raise ArgumentError, "Expected an int, got: bad value", fn ->
         VInt.from("bad value")
       end
@@ -252,6 +256,7 @@ defmodule ICalendarTest.Props do
 
     test "from" do
       assert VDate.from("20011212") == VDate.of(@date)
+
       assert_raise ArgumentError, "Expected a date, got: bad value", fn ->
         VDate.from("bad value")
       end
@@ -281,6 +286,7 @@ defmodule ICalendarTest.Props do
     test "from" do
       assert VDatetime.from("20010102T030405") == VDatetime.of(DateTime.to_naive(@date_time))
       assert VDatetime.from("20010102T030405Z") == VDatetime.of(@date_time)
+
       assert_raise ArgumentError, "Expected a date time, got: bad value", fn ->
         VDatetime.from("bad value")
       end
@@ -410,6 +416,14 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VGeo.of({1.3667, 103.8}))
     end
+
+    test "from" do
+      assert VGeo.from("1.3667;103.8") == VGeo.of({1.3667, 103.8})
+
+      assert_raise ArgumentError, ~s(Expected a "latitude;longitude", got: bad value), fn ->
+        VGeo.from("bad value")
+      end
+    end
   end
 
   describe "VInline" do
@@ -472,6 +486,7 @@ defmodule ICalendarTest.Props do
 
     test "from" do
       assert VTime.from("123456") == VTime.of({12, 34, 56})
+
       assert_raise ArgumentError, "Expected a time, got: bad value", fn ->
         VTime.from("bad value")
       end
