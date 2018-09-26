@@ -426,6 +426,11 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VInline.of("some raw string"))
     end
+
+    test "from" do
+      value = "some raw string"
+      assert VInline.from(value) == VInline.of(value)
+    end
   end
 
   describe "VUri" do
@@ -463,6 +468,13 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VTime.of({12, 34, 56}))
+    end
+
+    test "from" do
+      assert VTime.from("123456") == VTime.of({12, 34, 56})
+      assert_raise ArgumentError, "Expected a time, got: bad value", fn ->
+        VTime.from("bad value")
+      end
     end
   end
 
