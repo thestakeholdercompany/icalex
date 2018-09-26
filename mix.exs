@@ -6,6 +6,7 @@ defmodule Icalendar.MixProject do
       app: :icalendar,
       version: "0.1.0",
       elixir: "~> 1.6",
+      aliases: aliases(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -22,7 +23,14 @@ defmodule Icalendar.MixProject do
   defp deps do
     [
       {:elixir_uuid, "~> 1.2", only: [:test]},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:mix_test_watch, "~> 0.8", only: :dev}
+    ]
+  end
+
+  defp aliases do
+    [
+      "test.watch": ["test.watch --stale"]
     ]
   end
 end

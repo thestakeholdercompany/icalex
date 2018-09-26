@@ -8,6 +8,19 @@ defmodule ICalendar.Props.VDuration do
 
   def of(%Duration{} = value), do: %__MODULE__{value: value}
 
+  def from(value) when is_bitstring(value) do
+    regex = ~r/(?<signal>[+-]?)(?<duration>P.*)/
+
+    with %{"duration" => duration, "signal" => signal} <- Regex.named_captures(regex, value),
+         {:ok, duration} <- Duration.parse(duration) do
+      duration = if signal == "-", do: Duration.invert(duration), else: duration
+
+      __MODULE__.of(duration)
+    else
+      _ -> raise ArgumentError, message: "Expected a duration, got: #{value}"
+    end
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
       result = if Duration.to_seconds(value) < 0, do: "-P", else: "P"

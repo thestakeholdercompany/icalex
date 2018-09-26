@@ -346,8 +346,8 @@ defmodule ICalendarTest.Props do
                VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)})
              ) == "20010102T030405/20010102T030405"
 
-      duration = %Duration{megaseconds: 0, seconds: -28800, microseconds: 0}
-      assert ICal.to_ical(VPeriod.of({@date_time, duration})) == "20010102T030405Z/-PT8H"
+      duration = %Duration{megaseconds: 0, seconds: 28800, microseconds: 0}
+      assert ICal.to_ical(VPeriod.of({@date_time, duration})) == "20010102T030405Z/PT8H"
 
       duration = %Duration{megaseconds: 0, seconds: 28800, microseconds: 0}
 
@@ -357,6 +357,21 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VPeriod.of({@date_time, @date_time}))
+    end
+
+    test "from" do
+      assert VPeriod.from("20010102T030405Z/20010102T030405Z") ==
+               VPeriod.of({@date_time, @date_time})
+
+      assert VPeriod.from("20010102T030405/20010102T030405") ==
+               VPeriod.of({DateTime.to_naive(@date_time), DateTime.to_naive(@date_time)})
+
+      duration = %Duration{megaseconds: 0, seconds: 28800, microseconds: 0}
+      assert VPeriod.from("20010102T030405Z/PT8H") == VPeriod.of({@date_time, duration})
+
+      assert_raise ArgumentError, "Expected a period, got: bad value", fn ->
+        VPeriod.from("bad value")
+      end
     end
   end
 
@@ -705,6 +720,43 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
       assert Props.is_prop(VDuration.of(value))
+    end
+
+    test "from" do
+      value = %Duration{megaseconds: 0, seconds: 0, microseconds: 0}
+      assert VDuration.from("P") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 86400, microseconds: 0}
+      assert VDuration.from("P1D") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -86400, microseconds: 0}
+      assert VDuration.from("-P1D") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 86400 + 3600, microseconds: 0}
+      assert VDuration.from("P1DT1H") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -86400 - 3600, microseconds: 0}
+      assert VDuration.from("-P1DT1H") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 86400 + 3600 + 1800, microseconds: 0}
+      assert VDuration.from("P1DT1H30M") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -86400 - 3600 - 1800, microseconds: 0}
+      assert VDuration.from("-P1DT1H30M") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 86400 + 3600 + 1800 + 10, microseconds: 0}
+      assert VDuration.from("P1DT1H30M10S") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -86400 - 3600 - 1800 - 10, microseconds: 0}
+      assert VDuration.from("-P1DT1H30M10S") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 10, microseconds: 0}
+      assert VDuration.from("PT10S") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -10, microseconds: 0}
+      assert VDuration.from("-PT10S") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 1800, microseconds: 0}
+      assert VDuration.from("PT30M") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -1800, microseconds: 0}
+      assert VDuration.from("-PT30M") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: 3600, microseconds: 0}
+      assert VDuration.from("PT1H") == VDuration.of(value)
+      value = %Duration{megaseconds: 0, seconds: -3600, microseconds: 0}
+      assert VDuration.from("-PT1H") == VDuration.of(value)
+
+      assert_raise ArgumentError, "Expected a duration, got: bad value", fn ->
+        VDuration.from("bad value")
+      end
     end
   end
 end
