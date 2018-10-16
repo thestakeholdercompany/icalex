@@ -15,6 +15,10 @@ defmodule ICalendar.Props.VFrequency do
     end
   end
 
+  def from(value) when is_bitstring(value) do
+    __MODULE__.of(value)
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data), do: value
   end

@@ -695,6 +695,13 @@ defmodule ICalendarTest.Props do
       end)
     end
 
+    test "from_ical" do
+      ["secondly", "minutely", "hourly", "daily", "weekly", "monthly", "yearly"]
+      |> Enum.each(fn f ->
+        assert VFrequency.from(f) == VFrequency.of(f)
+      end)
+    end
+
     test "is_prop" do
       assert Props.is_prop(VFrequency.of("yearly"))
     end
