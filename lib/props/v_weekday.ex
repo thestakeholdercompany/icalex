@@ -25,6 +25,10 @@ defmodule ICalendar.Props.VWeekday do
     __MODULE__.of(value)
   end
 
+  def from(value) when is_bitstring(value) do
+    __MODULE__.of(value)
+  end
+
   defimpl ICal do
     def to_ical(
           %{value: %{"relative" => relative, "signal" => signal, "weekday" => weekday} = _value} =

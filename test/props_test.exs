@@ -312,6 +312,7 @@ defmodule ICalendarTest.Props do
       assert VDDDTypes.of(value) == %VDDDTypes{
                value: value
              }
+             # TODO cover all the types
     end
 
     test "to_ical" do
@@ -323,6 +324,15 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VDDDTypes.of(@date))
+    end
+    test "from" do
+      value = %Duration{megaseconds: 0, seconds: 86400, microseconds: 0}
+      assert VDDDTypes.from("P1D") == VDuration.of(value)
+      assert VDDDTypes.from("20010102T030405Z/20010102T030405Z") ==
+               VPeriod.of({@date_time, @date_time})
+      assert VDDDTypes.from("123456") == VTime.of({12, 34, 56})
+      assert VDDDTypes.from("20011212") == VDate.of(@date)
+      assert VDDDTypes.from("20010102T030405Z") == VDatetime.of(@date_time)
     end
   end
 
@@ -565,6 +575,10 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VDDDLists.of(@date_time))
     end
+    test "from" do
+      assert VDDDLists.from("20010102T030405Z") == [VDatetime.of(@date_time)]
+      assert VDDDLists.from("123456,20011212") == [VTime.of({12, 34, 56}), VDate.of(@date)]
+    end
   end
 
   describe "VRecur" do
@@ -648,6 +662,17 @@ defmodule ICalendarTest.Props do
 
     test "is_prop" do
       assert Props.is_prop(VWeekday.of("mo"))
+    end
+
+    test "from" do
+      assert VWeekday.from("mo") == %VWeekday{
+               params: %ICalendar.Props.Parameters{parameters: %{}},
+               value: %{"relative" => "", "signal" => "", "weekday" => "mo"}
+             }
+      assert VWeekday.from("+3mo") == %VWeekday{
+               params: %ICalendar.Props.Parameters{parameters: %{}},
+               value: %{"relative" => "3", "signal" => "+", "weekday" => "mo"}
+             }
     end
   end
 

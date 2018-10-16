@@ -14,6 +14,10 @@ defmodule ICalendar.Props.VDDDLists do
 
   def of(%DateTime{} = value), do: %__MODULE__{value: [VDDDTypes.of(value)]}
 
+  def from(value) when is_bitstring(value) do
+    value |> String.split(",") |> Enum.map(&VDDDTypes.from/1)
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
       value |> Enum.map(&ICal.to_ical(&1)) |> Enum.join(",")

@@ -18,6 +18,19 @@ defmodule ICalendar.Props.VDDDTypes do
   def of({%NaiveDateTime{} = _start_duration, %NaiveDateTime{} = _end_duration} = value),
     do: %__MODULE__{value: value}
 
+  def from(value) when is_bitstring(value) do
+    value_length = String.length(value)
+
+    cond do
+      String.starts_with?(value, ["P", "-P", "+P"]) -> ICalendar.Props.VDuration.from(value)
+      String.contains?(value, "/") -> ICalendar.Props.VPeriod.from(value)
+      value_length == 6 -> ICalendar.Props.VTime.from(value)
+      value_length == 8 -> ICalendar.Props.VDate.from(value)
+      value_length in [15, 16] -> ICalendar.Props.VDatetime.from(value)
+      true -> raise ArgumentError, message: ~s(Expected a date time, got: #{value})
+    end
+  end
+
   defimpl ICal do
     def to_ical(%{value: value} = _data) do
       case value do
