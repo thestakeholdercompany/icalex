@@ -638,6 +638,32 @@ defmodule ICalendarTest.Props do
     test "is_prop" do
       assert Props.is_prop(VRecur.of(%{}))
     end
+
+    test "from" do
+      assert VRecur.from("FREQ=DAILY;INTERVAL=2;COUNT=10") == %{
+               "count" => [%VInt{params: %Parameters{parameters: %{}}, value: 10}],
+               "freq" => [%VFrequency{params: %Parameters{parameters: %{}}, value: "DAILY"}],
+               "interval" => [%VInt{params: %Parameters{parameters: %{}}, value: 2}]
+             }
+
+      assert VRecur.from("FREQ=YEARLY;INTERVAL=2;BYMONTH=1;BYDAY=-SU;BYHOUR=8,9;BYMINUTE=30") ==
+               %{
+                 "byday" => [
+                   %VWeekday{
+                     params: %Parameters{parameters: %{}},
+                     value: %{"relative" => "", "signal" => "-", "weekday" => "SU"}
+                   }
+                 ],
+                 "byhour" => [
+                   %VInt{params: %Parameters{parameters: %{}}, value: 8},
+                   %VInt{params: %Parameters{parameters: %{}}, value: 9}
+                 ],
+                 "byminute" => [%VInt{params: %Parameters{parameters: %{}}, value: 30}],
+                 "bymonth" => [%VInt{params: %Parameters{parameters: %{}}, value: 1}],
+                 "freq" => [%VFrequency{params: %Parameters{parameters: %{}}, value: "YEARLY"}],
+                 "interval" => [%VInt{params: %Parameters{parameters: %{}}, value: 2}]
+               }
+    end
   end
 
   describe "VWeekday" do
