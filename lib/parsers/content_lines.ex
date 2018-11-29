@@ -12,4 +12,14 @@ defmodule ICalendar.Parsers.ContentLines do
 
     content_lines <> "\r\n"
   end
+
+  def from_ical(value) when is_bitstring(value) do
+    value
+    |> String.split()
+    |> Enum.map(fn line ->
+      {name, parameters, value} = ContentLine.parts(line)
+    end)
+    # TODO continue parser engine from here
+  end
+
 end
