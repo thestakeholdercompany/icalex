@@ -1,6 +1,7 @@
 defmodule ICalendarTest.Parsers do
   use ExUnit.Case
   doctest ICalendar
+  alias Timex.Duration
   alias ICalendar.Parsers.{ContentLine, ContentLines}
   alias ICalendar.Props.{Parameters, VText, VInt}
 
@@ -84,6 +85,170 @@ defmodule ICalendarTest.Parsers do
                |> Enum.join("")
              ]
              |> ContentLines.to_ical() == expected
+    end
+
+    test "from_ical" do
+      ics = File.read!("test/sample.ics")
+
+      assert ContentLines.from_ical(ics) == %ICalendar.Components.Component{
+               canonical_order: [],
+               components: [
+                 %ICalendar.Components.Component{
+                   canonical_order: [],
+                   components: [
+                     %ICalendar.Components.Component{
+                       canonical_order: [],
+                       components: [],
+                       exclusive: [],
+                       inclusive: [],
+                       multiple: [],
+                       name: "VALARM",
+                       properties: %{
+                         "action" => %ICalendar.Props.VText{
+                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                           value: "DISPLAY"
+                         },
+                         "description" => %ICalendar.Props.VText{
+                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                           value: "Pickup Reminder"
+                         },
+                         "trigger" => %ICalendar.Props.VDuration{
+                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                           value: Duration.from_minutes(-10)
+                         }
+                       },
+                       required: [],
+                       singletons: []
+                     }
+                   ],
+                   exclusive: [],
+                   inclusive: [],
+                   multiple: [],
+                   name: "VEVENT",
+                   properties: %{
+                     "description" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: " Access-A-Ride to 900 Jay St.\\, Brooklyn"
+                     },
+                     "dtend" => %ICalendar.Props.VDatetime{
+                       params: %ICalendar.Props.Parameters{
+                         parameters: %{"tzid" => "America/New_York"}
+                       },
+                       value: ~N[2013-08-02 11:04:00]
+                     },
+                     "dtstart" => %ICalendar.Props.VDatetime{
+                       params: %ICalendar.Props.Parameters{
+                         parameters: %{"tzid" => "America/New_York"}
+                       },
+                       value: ~N[2013-08-02 10:34:00]
+                     },
+                     "location" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: "1000 Broadway Ave.\\, Brooklyn"
+                     },
+                     "sequence" => %ICalendar.Props.VInt{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: 3
+                     },
+                     "status" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: "CONFIRMED"
+                     },
+                     "summary" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: "Access-A-Ride Pickup"
+                     }
+                   },
+                   required: [],
+                   singletons: []
+                 },
+                 %ICalendar.Components.Component{
+                   canonical_order: [],
+                   components: [
+                     %ICalendar.Components.Component{
+                       canonical_order: [],
+                       components: [],
+                       exclusive: [],
+                       inclusive: [],
+                       multiple: [],
+                       name: "VALARM",
+                       properties: %{
+                         "action" => %ICalendar.Props.VText{
+                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                           value: "DISPLAY"
+                         },
+                         "description" => %ICalendar.Props.VText{
+                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                           value: "Pickup Reminder"
+                         },
+                         "trigger" => %ICalendar.Props.VDuration{
+                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                           value: Duration.from_minutes(-10)
+                         }
+                       },
+                       required: [],
+                       singletons: []
+                     }
+                   ],
+                   exclusive: [],
+                   inclusive: [],
+                   multiple: [],
+                   name: "VEVENT",
+                   properties: %{
+                     "description" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: " Access-A-Ride to 1000 Broadway Ave.\\, Brooklyn"
+                     },
+                     "dtend" => %ICalendar.Props.VDatetime{
+                       params: %ICalendar.Props.Parameters{
+                         parameters: %{"tzid" => "America/New_York"}
+                       },
+                       value: ~N[2013-08-02 20:30:00]
+                     },
+                     "dtstart" => %ICalendar.Props.VDatetime{
+                       params: %ICalendar.Props.Parameters{
+                         parameters: %{"tzid" => "America/New_York"}
+                       },
+                       value: ~N[2013-08-02 20:00:00]
+                     },
+                     "location" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: "900 Jay St.\\, Brooklyn"
+                     },
+                     "sequence" => %ICalendar.Props.VInt{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: 3
+                     },
+                     "status" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: "CONFIRMED"
+                     },
+                     "summary" => %ICalendar.Props.VText{
+                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                       value: "Access-A-Ride Pickup"
+                     }
+                   },
+                   required: [],
+                   singletons: []
+                 }
+               ],
+               exclusive: [],
+               inclusive: [],
+               multiple: [],
+               name: "VCALENDAR",
+               properties: %{
+                 "calscale" => %ICalendar.Props.VText{
+                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                   value: "GREGORIAN"
+                 },
+                 "version" => %ICalendar.Props.VText{
+                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                   value: "2.0"
+                 }
+               },
+               required: [],
+               singletons: []
+             }
     end
   end
 end

@@ -27,12 +27,12 @@ defmodule ICalendar.Parsers.ContentLines do
 
   defp parser([line | lines], component) do
     case ContentLine.parts(line) do
-      {"begin", parameters, value} when is_nil(component) ->
-        component = ComponentsFactory.get_component(value, parameters)
+      {"begin", _parameters, value} when is_nil(component) ->
+        component = ComponentsFactory.get_component(value)
         parser(lines, component)
 
-      {"begin", parameters, value} ->
-        {lines, c} = parser(lines, ComponentsFactory.get_component(value, parameters))
+      {"begin", _parameters, value} ->
+        {lines, c} = parser(lines, ComponentsFactory.get_component(value))
 
         component =
           component
@@ -40,17 +40,17 @@ defmodule ICalendar.Parsers.ContentLines do
 
         parser(lines, component)
 
-      {"end", parameters, value} ->
+      {"end", _parameters, _value} ->
         {lines, component}
 
       {property, parameters, value} ->
-        type_name = PropsFactory.get_type_name(property)
-        # TODO parameter?
-        type = PropsFactory.from_ical(type_name, value)
+        type =
+          PropsFactory.from_ical(property, value)
+          |> Map.put(:params, parameters)
 
         component =
           component
-          |> Component.add(type_name, type)
+          |> Component.add(property, type, parameters)
 
         parser(lines, component)
     end
