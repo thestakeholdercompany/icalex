@@ -2,6 +2,7 @@ defmodule ICalendarTest.Parsers do
   use ExUnit.Case
   doctest ICalendar
   alias Timex.Duration
+  alias ICalendar.Components.Component
   alias ICalendar.Parsers.{ContentLine, ContentLines}
   alias ICalendar.Props.{Parameters, VText, VInt}
 
@@ -249,6 +250,12 @@ defmodule ICalendarTest.Parsers do
                required: [],
                singletons: []
              }
+    end
+
+    test "round trip" do
+      # TODO round trip test
+#      ics = File.read!("test/sample.ics")
+#      assert ContentLines.from_ical(ics) |> Component.to_ical() == ics
     end
   end
 end
