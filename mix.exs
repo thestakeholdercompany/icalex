@@ -23,7 +23,7 @@ defmodule Icalendar.MixProject do
   defp deps do
     [
       {:elixir_uuid, "~> 1.2", only: [:test]},
-      {:timex, "~> 3.0"},
+      {:timex, "~> 3.6"},
       {:mix_test_watch, "~> 0.8", only: [:test]}
     ]
   end
