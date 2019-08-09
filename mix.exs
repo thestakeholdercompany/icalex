@@ -3,9 +3,11 @@ defmodule Icalendar.MixProject do
 
   def project do
     [
-      app: :icalendar,
+      app: :icalex,
       version: "0.1.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.8",
+      description: description(),
+      package: package(),
       aliases: aliases(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -17,6 +19,22 @@ defmodule Icalendar.MixProject do
     [
       extra_applications: [:logger, :timex]
     ]
+  end
+
+  defp description do
+    """
+    A complete set of tools to build and parse iCalendar specification
+    """
+  end
+
+  defp package do
+    [ files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+      maintainers: ["Vincent Dupont"],
+      licenses: ["MIT"],
+      links: %{
+        "Changelog": "https://github.com/thestakeholdercompany/icalex/blob/master/CHANGELOG.md",
+        "GitHub": "https://github.com/thestakeholdercompany/icalex"
+      }]
   end
 
   # Run "mix help deps" to learn about dependencies.
