@@ -134,7 +134,7 @@ defmodule ICalendar.Components.Component do
     do: encode(name, value, %Parameters{parameters: parameters}, encode)
 
   def validate(%__MODULE__{} = component) do
-    keys = component.properties |> Map.keys() |> Enum.map(&String.downcase(&1))
+    _keys = component.properties |> Map.keys() |> Enum.map(&String.downcase(&1))
     # TODO validate
   end
 
