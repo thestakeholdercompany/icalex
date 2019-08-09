@@ -1,22 +1,22 @@
-# Icalendar
+# ICalex
 
 **TODO: Add description**
 
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `icalendar` to your list of dependencies in `mix.exs`:
+by adding `icalex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:icalendar, "~> 0.1.0"}
+    {:icalex, "~> 0.1.0"}
   ]
 end
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/icalendar](https://hexdocs.pm/icalendar).
+be found at [https://hexdocs.pm/icalex](https://hexdocs.pm/icalex).
 
-# icalendar
+# icalex

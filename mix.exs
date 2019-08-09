@@ -1,4 +1,4 @@
-defmodule Icalendar.MixProject do
+defmodule ICalex.MixProject do
   use Mix.Project
   @version "0.1.0"
 
