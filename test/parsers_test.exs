@@ -253,8 +253,8 @@ defmodule ICalexTest.Parsers do
 
     test "round trip" do
       # TODO round trip test
-#      ics = File.read!("test/sample.ics")
-#      assert ContentLines.from_ical(ics) |> Component.to_ical() == ics
+      #      ics = File.read!("test/sample.ics")
+      #      assert ContentLines.from_ical(ics) |> Component.to_ical() == ics
     end
   end
 end

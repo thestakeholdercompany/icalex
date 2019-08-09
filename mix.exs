@@ -30,13 +30,15 @@ defmodule ICalex.MixProject do
   end
 
   defp package do
-    [ files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+    [
+      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
       maintainers: ["Vincent Dupont"],
       licenses: ["MIT"],
       links: %{
-        "Changelog": "https://github.com/thestakeholdercompany/icalex/blob/master/CHANGELOG.md",
-        "GitHub": "https://github.com/thestakeholdercompany/icalex"
-      }]
+        Changelog: "https://github.com/thestakeholdercompany/icalex/blob/master/CHANGELOG.md",
+        GitHub: "https://github.com/thestakeholdercompany/icalex"
+      }
+    ]
   end
 
   # Run "mix help deps" to learn about dependencies.
@@ -45,18 +47,20 @@ defmodule ICalex.MixProject do
       {:elixir_uuid, "~> 1.2", only: [:test]},
       {:timex, "~> 3.6"},
       {:mix_test_watch, "~> 0.8", only: [:test]},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end
 
   defp docs do
-    [main: "getting-started",
+    [
+      main: "ICalex",
       formatter_opts: [gfm: true],
       source_ref: @version,
       source_url: "https://github.com/thestakeholdercompany/icalex",
       extras: [
         "CHANGELOG.md"
-      ]]
+      ]
+    ]
   end
 
   defp aliases do
