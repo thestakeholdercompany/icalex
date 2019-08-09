@@ -1,16 +1,18 @@
 defmodule Icalendar.MixProject do
   use Mix.Project
+  @version "0.1.0"
 
   def project do
     [
       app: :icalex,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.8",
       description: description(),
       package: package(),
       aliases: aliases(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -42,8 +44,19 @@ defmodule Icalendar.MixProject do
     [
       {:elixir_uuid, "~> 1.2", only: [:test]},
       {:timex, "~> 3.6"},
-      {:mix_test_watch, "~> 0.8", only: [:test]}
+      {:mix_test_watch, "~> 0.8", only: [:test]},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
     ]
+  end
+
+  defp docs do
+    [main: "getting-started",
+      formatter_opts: [gfm: true],
+      source_ref: @version,
+      source_url: "https://github.com/thestakeholdercompany/icalex",
+      extras: [
+        "CHANGELOG.md"
+      ]]
   end
 
   defp aliases do
