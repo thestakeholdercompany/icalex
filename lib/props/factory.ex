@@ -1,6 +1,6 @@
-defmodule ICalendar.Props.Factory do
+defmodule ICalex.Props.Factory do
   @moduledoc false
-  alias ICalendar.Props
+  alias ICalex.Props
 
   @property_to_type %{
     ####################################

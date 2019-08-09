@@ -1,9 +1,9 @@
-defmodule ICalendar.Props.VInline do
+defmodule ICalex.Props.VInline do
   @moduledoc false
-  use ICalendar.Props
+  use ICalex.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def of(value) when is_bitstring(value), do: %__MODULE__{value: value}
   def from(value) when is_bitstring(value), do: __MODULE__.of(value)

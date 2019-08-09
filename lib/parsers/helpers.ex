@@ -1,4 +1,4 @@
-defmodule ICalendar.Parsers.Helpers do
+defmodule ICalex.Parsers.Helpers do
   @moduledoc false
   import String, only: [replace: 3]
 

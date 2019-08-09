@@ -1,9 +1,9 @@
-defmodule ICalendarTest.Parsers do
+defmodule ICalexTest.Parsers do
   use ExUnit.Case
-  doctest ICalendar
+  doctest ICalex
   alias Timex.Duration
-  alias ICalendar.Parsers.{ContentLine, ContentLines}
-  alias ICalendar.Props.{Parameters, VText, VInt}
+  alias ICalex.Parsers.{ContentLine, ContentLines}
+  alias ICalex.Props.{Parameters, VText, VInt}
 
   describe "ContentLine" do
     test "parts" do
@@ -90,13 +90,13 @@ defmodule ICalendarTest.Parsers do
     test "from_ical" do
       ics = File.read!("test/sample.ics")
 
-      assert ContentLines.from_ical(ics) == %ICalendar.Components.Component{
+      assert ContentLines.from_ical(ics) == %ICalex.Components.Component{
                canonical_order: [],
                components: [
-                 %ICalendar.Components.Component{
+                 %ICalex.Components.Component{
                    canonical_order: [],
                    components: [
-                     %ICalendar.Components.Component{
+                     %ICalex.Components.Component{
                        canonical_order: [],
                        components: [],
                        exclusive: [],
@@ -104,16 +104,16 @@ defmodule ICalendarTest.Parsers do
                        multiple: [],
                        name: "VALARM",
                        properties: %{
-                         "action" => %ICalendar.Props.VText{
-                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                         "action" => %ICalex.Props.VText{
+                           params: %ICalex.Props.Parameters{parameters: %{}},
                            value: "DISPLAY"
                          },
-                         "description" => %ICalendar.Props.VText{
-                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                         "description" => %ICalex.Props.VText{
+                           params: %ICalex.Props.Parameters{parameters: %{}},
                            value: "Pickup Reminder"
                          },
-                         "trigger" => %ICalendar.Props.VDuration{
-                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                         "trigger" => %ICalex.Props.VDuration{
+                           params: %ICalex.Props.Parameters{parameters: %{}},
                            value: Duration.from_minutes(-10)
                          }
                        },
@@ -126,46 +126,46 @@ defmodule ICalendarTest.Parsers do
                    multiple: [],
                    name: "VEVENT",
                    properties: %{
-                     "description" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "description" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: " Access-A-Ride to 900 Jay St.\\, Brooklyn"
                      },
-                     "dtend" => %ICalendar.Props.VDatetime{
-                       params: %ICalendar.Props.Parameters{
+                     "dtend" => %ICalex.Props.VDatetime{
+                       params: %ICalex.Props.Parameters{
                          parameters: %{"tzid" => "America/New_York"}
                        },
                        value: ~N[2013-08-02 11:04:00]
                      },
-                     "dtstart" => %ICalendar.Props.VDatetime{
-                       params: %ICalendar.Props.Parameters{
+                     "dtstart" => %ICalex.Props.VDatetime{
+                       params: %ICalex.Props.Parameters{
                          parameters: %{"tzid" => "America/New_York"}
                        },
                        value: ~N[2013-08-02 10:34:00]
                      },
-                     "location" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "location" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: "1000 Broadway Ave.\\, Brooklyn"
                      },
-                     "sequence" => %ICalendar.Props.VInt{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "sequence" => %ICalex.Props.VInt{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: 3
                      },
-                     "status" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "status" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: "CONFIRMED"
                      },
-                     "summary" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "summary" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: "Access-A-Ride Pickup"
                      }
                    },
                    required: [],
                    singletons: []
                  },
-                 %ICalendar.Components.Component{
+                 %ICalex.Components.Component{
                    canonical_order: [],
                    components: [
-                     %ICalendar.Components.Component{
+                     %ICalex.Components.Component{
                        canonical_order: [],
                        components: [],
                        exclusive: [],
@@ -173,16 +173,16 @@ defmodule ICalendarTest.Parsers do
                        multiple: [],
                        name: "VALARM",
                        properties: %{
-                         "action" => %ICalendar.Props.VText{
-                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                         "action" => %ICalex.Props.VText{
+                           params: %ICalex.Props.Parameters{parameters: %{}},
                            value: "DISPLAY"
                          },
-                         "description" => %ICalendar.Props.VText{
-                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                         "description" => %ICalex.Props.VText{
+                           params: %ICalex.Props.Parameters{parameters: %{}},
                            value: "Pickup Reminder"
                          },
-                         "trigger" => %ICalendar.Props.VDuration{
-                           params: %ICalendar.Props.Parameters{parameters: %{}},
+                         "trigger" => %ICalex.Props.VDuration{
+                           params: %ICalex.Props.Parameters{parameters: %{}},
                            value: Duration.from_minutes(-10)
                          }
                        },
@@ -195,36 +195,36 @@ defmodule ICalendarTest.Parsers do
                    multiple: [],
                    name: "VEVENT",
                    properties: %{
-                     "description" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "description" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: " Access-A-Ride to 1000 Broadway Ave.\\, Brooklyn"
                      },
-                     "dtend" => %ICalendar.Props.VDatetime{
-                       params: %ICalendar.Props.Parameters{
+                     "dtend" => %ICalex.Props.VDatetime{
+                       params: %ICalex.Props.Parameters{
                          parameters: %{"tzid" => "America/New_York"}
                        },
                        value: ~N[2013-08-02 20:30:00]
                      },
-                     "dtstart" => %ICalendar.Props.VDatetime{
-                       params: %ICalendar.Props.Parameters{
+                     "dtstart" => %ICalex.Props.VDatetime{
+                       params: %ICalex.Props.Parameters{
                          parameters: %{"tzid" => "America/New_York"}
                        },
                        value: ~N[2013-08-02 20:00:00]
                      },
-                     "location" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "location" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: "900 Jay St.\\, Brooklyn"
                      },
-                     "sequence" => %ICalendar.Props.VInt{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "sequence" => %ICalex.Props.VInt{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: 3
                      },
-                     "status" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "status" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: "CONFIRMED"
                      },
-                     "summary" => %ICalendar.Props.VText{
-                       params: %ICalendar.Props.Parameters{parameters: %{}},
+                     "summary" => %ICalex.Props.VText{
+                       params: %ICalex.Props.Parameters{parameters: %{}},
                        value: "Access-A-Ride Pickup"
                      }
                    },
@@ -237,12 +237,12 @@ defmodule ICalendarTest.Parsers do
                multiple: [],
                name: "VCALENDAR",
                properties: %{
-                 "calscale" => %ICalendar.Props.VText{
-                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                 "calscale" => %ICalex.Props.VText{
+                   params: %ICalex.Props.Parameters{parameters: %{}},
                    value: "GREGORIAN"
                  },
-                 "version" => %ICalendar.Props.VText{
-                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                 "version" => %ICalex.Props.VText{
+                   params: %ICalex.Props.Parameters{parameters: %{}},
                    value: "2.0"
                  }
                },

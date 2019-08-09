@@ -1,12 +1,12 @@
-defmodule ICalendar.Props.VPeriod do
+defmodule ICalex.Props.VPeriod do
   @moduledoc false
-  use ICalendar.Props
-  alias ICalendar.Props.{VDDDTypes, VDuration}
-  alias ICalendar.Parsers.Helpers
+  use ICalex.Props
+  alias ICalex.Props.{VDDDTypes, VDuration}
+  alias ICalex.Parsers.Helpers
   alias Timex.Duration
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def of({%DateTime{} = _start_duration, %DateTime{} = _end_duration} = value),
     do: %__MODULE__{value: value}

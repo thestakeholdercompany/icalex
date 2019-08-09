@@ -1,12 +1,12 @@
-defmodule ICalendarTest.Components do
+defmodule ICalexTest.Components do
   use ExUnit.Case
-  doctest ICalendar
+  doctest ICalex
 
   alias Timex.Duration
 
-  alias ICalendar.Props
+  alias ICalex.Props
 
-  alias ICalendar.Components.{
+  alias ICalex.Components.{
     Factory,
     Component
   }
@@ -30,15 +30,15 @@ defmodule ICalendarTest.Components do
 
       assert component.properties["prodid"] == %Props.VText{value: "-//my product//"}
 
-      assert component.properties["rdate"] == %ICalendar.Props.VDDDLists{
-               params: %ICalendar.Props.Parameters{parameters: %{}},
+      assert component.properties["rdate"] == %ICalex.Props.VDDDLists{
+               params: %ICalex.Props.Parameters{parameters: %{}},
                value: [
-                 %ICalendar.Props.VDDDTypes{
-                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                 %ICalex.Props.VDDDTypes{
+                   params: %ICalex.Props.Parameters{parameters: %{}},
                    value: date
                  },
-                 %ICalendar.Props.VDDDTypes{
-                   params: %ICalendar.Props.Parameters{parameters: %{}},
+                 %ICalex.Props.VDDDTypes{
+                   params: %ICalex.Props.Parameters{parameters: %{}},
                    value: date
                  }
                ]
@@ -109,15 +109,15 @@ defmodule ICalendarTest.Components do
         |> Component.add_component(event)
 
       assert component.components == [
-               %ICalendar.Components.Component{
+               %ICalex.Components.Component{
                  components: [],
                  inclusive: [],
                  name: "VEVENT",
                  properties: %{
                    "dtend" => "20000102T000000",
                    "dtstart" => "20000101T000000",
-                   "summary" => %ICalendar.Props.VText{
-                     params: %ICalendar.Props.Parameters{parameters: %{}},
+                   "summary" => %ICalex.Props.VText{
+                     params: %ICalex.Props.Parameters{parameters: %{}},
                      value: "A brief history of time"
                    }
                  },

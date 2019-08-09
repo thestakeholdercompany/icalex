@@ -1,12 +1,12 @@
-defmodule ICalendarTest.Props do
+defmodule ICalexTest.Props do
   use ExUnit.Case
-  doctest ICalendar
+  doctest ICalex
 
   alias Timex.Duration
 
-  alias ICalendar.Props
+  alias ICalex.Props
 
-  alias ICalendar.Props.{
+  alias ICalex.Props.{
     Factory,
     Parameters,
     VBinary,
@@ -706,12 +706,12 @@ defmodule ICalendarTest.Props do
 
     test "from" do
       assert VWeekday.from("mo") == %VWeekday{
-               params: %ICalendar.Props.Parameters{parameters: %{}},
+               params: %ICalex.Props.Parameters{parameters: %{}},
                value: %{"relative" => "", "signal" => "", "weekday" => "mo"}
              }
 
       assert VWeekday.from("+3mo") == %VWeekday{
-               params: %ICalendar.Props.Parameters{parameters: %{}},
+               params: %ICalex.Props.Parameters{parameters: %{}},
                value: %{"relative" => "3", "signal" => "+", "weekday" => "mo"}
              }
     end

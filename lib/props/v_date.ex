@@ -1,10 +1,10 @@
-defmodule ICalendar.Props.VDate do
+defmodule ICalex.Props.VDate do
   @moduledoc false
-  use ICalendar.Props
-  alias ICalendar.Props.Parameters
+  use ICalex.Props
+  alias ICalex.Props.Parameters
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields() ++ [params: %Parameters{parameters: %{value: "DATE"}}]
+  defstruct ICalex.Props.common_fields() ++ [params: %Parameters{parameters: %{value: "DATE"}}]
 
   def of(%Date{} = value), do: %__MODULE__{value: value}
 

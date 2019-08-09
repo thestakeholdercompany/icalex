@@ -1,9 +1,9 @@
-defmodule ICalendar.Props.VFloat do
+defmodule ICalex.Props.VFloat do
   @moduledoc false
-  use ICalendar.Props
+  use ICalex.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def of(value) when is_float(value), do: %__MODULE__{value: value}
 

@@ -1,9 +1,9 @@
-defmodule ICalendar.Props.VFrequency do
+defmodule ICalex.Props.VFrequency do
   @moduledoc false
-  use ICalendar.Props
+  use ICalex.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def of(value) when is_bitstring(value) do
     value = String.downcase(value)

@@ -1,6 +1,6 @@
-defmodule ICalendar.Props do
+defmodule ICalex.Props do
   @moduledoc false
-  alias ICalendar.Props.Parameters
+  alias ICalex.Props.Parameters
 
   def common_fields do
     [value: nil, params: %Parameters{}]

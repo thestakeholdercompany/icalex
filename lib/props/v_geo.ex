@@ -1,9 +1,9 @@
-defmodule ICalendar.Props.VGeo do
+defmodule ICalex.Props.VGeo do
   @moduledoc false
-  use ICalendar.Props
+  use ICalex.Props
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def of({_lat, _lon} = value), do: %__MODULE__{value: value}
   def of([lat, lon] = _value), do: %__MODULE__{value: {lat, lon}}

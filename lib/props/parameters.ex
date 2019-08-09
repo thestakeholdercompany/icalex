@@ -1,11 +1,11 @@
-defmodule ICalendar.Props.Parameters do
+defmodule ICalex.Props.Parameters do
   @moduledoc false
   defstruct parameters: %{}
 
-  def is_empty(%ICalendar.Props.Parameters{parameters: parameters} = _params),
+  def is_empty(%ICalex.Props.Parameters{parameters: parameters} = _params),
     do: parameters === %{}
 
-  def to_ical(%ICalendar.Props.Parameters{parameters: parameters} = _params, sorted \\ true) do
+  def to_ical(%ICalex.Props.Parameters{parameters: parameters} = _params, sorted \\ true) do
     regex = Regex.compile!("[,;: ’']")
 
     sanitize_value = fn value ->

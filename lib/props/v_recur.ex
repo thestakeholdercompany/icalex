@@ -1,7 +1,7 @@
-defmodule ICalendar.Props.VRecur do
+defmodule ICalex.Props.VRecur do
   @moduledoc false
-  use ICalendar.Props
-  alias ICalendar.Props
+  use ICalex.Props
+  alias ICalex.Props
 
   @canonical_keys [
     "freq",
@@ -82,7 +82,7 @@ defmodule ICalendar.Props.VRecur do
     do: Enum.reduce(m, %{}, fn {key, value}, acc -> Map.put(acc, String.downcase(key), value) end)
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def of(%{} = value), do: %__MODULE__{value: map_keys_to_downcase(value)}
 
@@ -117,6 +117,6 @@ defmodule ICalendar.Props.VRecur do
   end
 
   defimpl ICal do
-    def to_ical(data), do: ICalendar.Props.VRecur.to_ical(data)
+    def to_ical(data), do: ICalex.Props.VRecur.to_ical(data)
   end
 end

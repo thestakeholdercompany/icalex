@@ -1,10 +1,10 @@
-defmodule ICalendar.Props.VDatetime do
+defmodule ICalex.Props.VDatetime do
   @moduledoc false
-  use ICalendar.Props
-  alias ICalendar.Parsers.Helpers
+  use ICalex.Props
+  alias ICalex.Parsers.Helpers
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   def format_date(year, month, day, hour, minute, second) do
     format = fn n -> n |> Integer.to_string() |> String.pad_leading(2, "0") end
@@ -40,8 +40,8 @@ defmodule ICalendar.Props.VDatetime do
       ts =
         value
         |> DateTime.to_naive()
-        |> ICalendar.Props.VDatetime.of()
-        |> ICalendar.Props.VDatetime.to_ical()
+        |> ICalex.Props.VDatetime.of()
+        |> ICalex.Props.VDatetime.to_ical()
 
       if zone_abbr == "UTC" do
         ts <> "Z"
@@ -51,7 +51,7 @@ defmodule ICalendar.Props.VDatetime do
     end
 
     def to_ical(%{value: %NaiveDateTime{} = _value} = data) do
-      ICalendar.Props.VDatetime.to_ical(data)
+      ICalex.Props.VDatetime.to_ical(data)
     end
   end
 end

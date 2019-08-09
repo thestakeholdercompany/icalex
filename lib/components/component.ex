@@ -1,7 +1,7 @@
-defmodule ICalendar.Components.Component do
+defmodule ICalex.Components.Component do
   @moduledoc false
-  alias ICalendar.Props.{Factory, Parameters, VText}
-  alias ICalendar.Parsers.{ContentLines, ContentLine}
+  alias ICalex.Props.{Factory, Parameters, VText}
+  alias ICalex.Parsers.{ContentLines, ContentLine}
 
   @enforce_keys [:name]
   defstruct name: nil,
@@ -123,7 +123,7 @@ defmodule ICalendar.Components.Component do
   defp encode(name, value, nil, encode), do: encode(name, value, %Parameters{}, encode)
 
   defp encode(name, value, %Parameters{} = parameters, _encode) do
-    if ICalendar.Props.is_prop(value) do
+    if ICalex.Props.is_prop(value) do
       value
     else
       Factory.get_type_name(name) |> Factory.get_type(value, parameters)
@@ -140,6 +140,6 @@ defmodule ICalendar.Components.Component do
 
   defimpl ICal do
     def to_ical(data),
-      do: ICalendar.Components.Component.to_ical(data)
+      do: ICalex.Components.Component.to_ical(data)
   end
 end

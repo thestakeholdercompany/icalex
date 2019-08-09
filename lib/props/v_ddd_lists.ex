@@ -1,10 +1,10 @@
-defmodule ICalendar.Props.VDDDLists do
+defmodule ICalex.Props.VDDDLists do
   @moduledoc false
-  use ICalendar.Props
-  alias ICalendar.Props.VDDDTypes
+  use ICalex.Props
+  alias ICalex.Props.VDDDTypes
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields()
+  defstruct ICalex.Props.common_fields()
 
   # TODO where TZID is used in library
   def of(value) when is_list(value) do

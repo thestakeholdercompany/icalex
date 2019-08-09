@@ -1,7 +1,7 @@
-defmodule ICalendar.Parsers.ContentLine do
+defmodule ICalex.Parsers.ContentLine do
   @moduledoc false
 
-  alias ICalendar.Props.{Parameters, VText}
+  alias ICalex.Props.{Parameters, VText}
 
   def parts(line) when is_bitstring(line) do
     [name_parameters, value] = String.split(line, ":", parts: 2)
@@ -18,7 +18,7 @@ defmodule ICalendar.Parsers.ContentLine do
 
   def from_parts(name, %Parameters{} = params, value, sorted \\ true) do
     value =
-      if ICalendar.Props.is_prop(value),
+      if ICalex.Props.is_prop(value),
         do: ICal.to_ical(value),
         else: ICal.to_ical(%VText{value: value})
 

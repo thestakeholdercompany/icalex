@@ -1,10 +1,10 @@
-defmodule ICalendar.Props.VTime do
+defmodule ICalex.Props.VTime do
   @moduledoc false
-  use ICalendar.Props
-  alias ICalendar.Props.Parameters
+  use ICalex.Props
+  alias ICalex.Props.Parameters
 
   @enforce_keys [:value]
-  defstruct ICalendar.Props.common_fields() ++ [params: %Parameters{parameters: %{value: "TIME"}}]
+  defstruct ICalex.Props.common_fields() ++ [params: %Parameters{parameters: %{value: "TIME"}}]
 
   def of({hour, minute, second}),
     do: %__MODULE__{value: %Time{hour: hour, minute: minute, second: second}}

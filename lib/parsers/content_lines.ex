@@ -1,10 +1,10 @@
-defmodule ICalendar.Parsers.ContentLines do
+defmodule ICalex.Parsers.ContentLines do
   @moduledoc false
 
-  alias ICalendar.Parsers.ContentLine
-  alias ICalendar.Components.Factory, as: ComponentsFactory
-  alias ICalendar.Props.Factory, as: PropsFactory
-  alias ICalendar.Components.Component
+  alias ICalex.Parsers.ContentLine
+  alias ICalex.Components.Factory, as: ComponentsFactory
+  alias ICalex.Props.Factory, as: PropsFactory
+  alias ICalex.Components.Component
 
   def to_ical(content_lines) when is_list(content_lines) do
     content_lines = for line <- content_lines, line != "", do: ContentLine.to_ical(line)

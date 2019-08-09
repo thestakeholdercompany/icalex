@@ -1,6 +1,6 @@
-defmodule ICalendar.Components.Factory do
+defmodule ICalex.Components.Factory do
   @moduledoc false
-  alias ICalendar.Components.Component
+  alias ICalex.Components.Component
 
   def get_component(name, properties \\ %{}, components \\ []) do
     case name do

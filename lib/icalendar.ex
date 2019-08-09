@@ -1,6 +1,6 @@
-defmodule ICalendar do
+defmodule ICalex do
   @moduledoc """
-  Documentation for ICalendar.
+  Documentation for ICalex.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule ICalendar do
 
   ## Examples
 
-      iex> ICalendar.hello
+      iex> ICalex.hello
       :world
 
   """
