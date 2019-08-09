@@ -2,7 +2,6 @@ defmodule ICalendarTest.Parsers do
   use ExUnit.Case
   doctest ICalendar
   alias Timex.Duration
-  alias ICalendar.Components.Component
   alias ICalendar.Parsers.{ContentLine, ContentLines}
   alias ICalendar.Props.{Parameters, VText, VInt}
 
