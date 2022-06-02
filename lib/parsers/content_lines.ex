@@ -5,6 +5,7 @@ defmodule ICalex.Parsers.ContentLines do
   alias ICalex.Components.Factory, as: ComponentsFactory
   alias ICalex.Props.Factory, as: PropsFactory
   alias ICalex.Components.Component
+  alias ICalex.Parsers.Helpers
 
   def to_ical(content_lines) when is_list(content_lines) do
     content_lines = for line <- content_lines, line != "", do: ContentLine.to_ical(line)
@@ -20,6 +21,7 @@ defmodule ICalex.Parsers.ContentLines do
     {[], component} =
       value
       |> String.split("\r\n")
+      |> Helpers.fix_linebreak_in_the_middle_of_value()  # Attachements come from Postmark have this issue
       |> parser(nil)
 
     component
