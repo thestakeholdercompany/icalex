@@ -86,32 +86,21 @@ defmodule ICalex.Parsers.Helpers do
   " 0100000003AA8F50FFD17984585F51196380DC9C6"]. And when this list go throught parser(nil), the value " 0100000003AA8F50FFD17984585F51196380DC9C6" will
   cause error: (MatchError) no match of right hand side value: [" 0100000003AA8F50FFD17984585F51196380DC9C6"]
   Basically the second value in the list is not a legic ical field, it was created because there is an incorrect linebreak in the original data that cause
-  the UID field to be cut into two, with one is still a ablegit field with key - value structure and another one is not.
+  the UID field to be cut into two, with one is still a legit field with key - value structure and another one is not.
 
   This update is to clean up such incorrect linebreaks inside each field.
   """
   def fix_linebreak_in_the_middle_of_value(components) when is_list(components) do
     regex = ~r/^[A-Z-]*[:;][A-Z0-9]*/
-    IO.inspect(components)
-    fix_linebreak_in_the_middle_of_value(components, [], regex)
-  end
 
-  def fix_linebreak_in_the_middle_of_value([head | tail], cleaned_components, regex)
-      when is_list(cleaned_components) do
-    cleaned_components =
-      if String.match?(head, regex) do
-        [head | cleaned_components]
+    components
+    |> Enum.reduce([], fn component, acc ->
+      if String.match?(component, regex) do
+        acc ++ [component]
       else
-        last_added = Enum.at(cleaned_components, 0)
-        last_added = last_added <> head
-        cleaned_components |> List.delete_at(0) |> List.insert_at(0, last_added)
+        last_added = Enum.at(acc, -1)
+        List.replace_at(acc, -1, last_added <> component)
       end
-
-    fix_linebreak_in_the_middle_of_value(tail, cleaned_components, regex)
-  end
-
-  def fix_linebreak_in_the_middle_of_value([], cleaned_components, _)
-      when is_list(cleaned_components) do
-    Enum.reverse(cleaned_components)
+    end)
   end
 end
